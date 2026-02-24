@@ -1,0 +1,51 @@
+{
+
+  "categories": [
+    { "id": "1", "name": "Chest" },
+    { "id": "2", "name": "Back" },
+    { "id": "3", "name": "Shoulders" },
+    { "id": "4", "name": "Arms" },
+    { "id": "5", "name": "Legs & Glutes" },
+    { "id": "6", "name": "Core" }
+  ],
+  
+  "exercises": [
+    { "id": "1001", "name": "Barbell Bench Press", "cat_id": "1" },
+    { "id": "1002", "name": "Dumbbell Bench Press", "cat_id": "1" },
+    { "id": "1003", "name": "Incline Bench Press", "cat_id": "1" },
+    { "id": "1004", "name": "Dips", "cat_id": "1" },
+    { "id": "1005", "name": "Push-ups", "cat_id": "1" },
+    { "id": "1006", "name": "Chest Fly", "cat_id": "1" },
+    { "id": "2001", "name": "Pull-ups", "cat_id": "2" },
+    { "id": "2002", "name": "Lat Pulldown", "cat_id": "2" },
+    { "id": "2003", "name": "Barbell Row", "cat_id": "2" },
+    { "id": "2004", "name": "Dumbbell Row", "cat_id": "2" },
+    { "id": "2005", "name": "Seated Cable Row", "cat_id": "2" },
+    { "id": "2006", "name": "Deadlift", "cat_id": "2" },
+    { "id": "3001", "name": "Dumbbell Shoulder Press", "cat_id": "3" },
+    { "id": "3002", "name": "Barbell Shoulder Press", "cat_id": "3" },
+    { "id": "3003", "name": "Lateral Raise", "cat_id": "3" },
+    { "id": "3004", "name": "Front Raise", "cat_id": "3" },
+    { "id": "3005", "name": "Rear Delt Fly", "cat_id": "3" },
+    { "id": "4001", "name": "Dumbbell Curl", "cat_id": "4" },
+    { "id": "4002", "name": "Barbell Curl", "cat_id": "4" },
+    { "id": "4003", "name": "Hammer Curl", "cat_id": "4" },
+    { "id": "4004", "name": "Tricep Pushdown", "cat_id": "4" },
+    { "id": "4005", "name": "Skull Crushers", "cat_id": "4" },
+    { "id": "4006", "name": "Close-grip Bench Press", "cat_id": "4" },
+    { "id": "5001", "name": "Squat", "cat_id": "5" },
+    { "id": "5002", "name": "Lunges", "cat_id": "5" },
+    { "id": "5003", "name": "Leg Press", "cat_id": "5" },
+    { "id": "5004", "name": "Leg Extension", "cat_id": "5" },
+    { "id": "5005", "name": "Leg Curl", "cat_id": "5" },
+    { "id": "5006", "name": "Glute Bridge", "cat_id": "5" },
+    { "id": "5007", "name": "Hip Thrust", "cat_id": "5" },
+    { "id": "5008", "name": "Bulgarian Split Squat", "cat_id": "5" },
+    { "id": "5009", "name": "Romanian Deadlift", "cat_id": "5" },
+    { "id": "6001", "name": "Plank", "cat_id": "6" },
+    { "id": "6002", "name": "Crunch", "cat_id": "6" },
+    { "id": "6003", "name": "Russian Twist", "cat_id": "6" },
+    { "id": "6004", "name": "Hanging Leg Raise", "cat_id": "6" },
+    { "id": "6005", "name": "Mountain Climbers", "cat_id": "6" }
+  ]
+}
