@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .analytics-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #edf0f6;
+    box-shadow: 0 10px 24px rgba(20, 27, 45, 0.06);
+  }
+
+  .analytics-card h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+  }
+
+  .radar-wrap {
+    height: 320px;
+  }
+
+  .records-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f7f8fc;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .record-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .record-label strong {
+    font-size: 13px;
+  }
+
+  .record-label span {
+    color: #6a6d7a;
+    font-size: 11px;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 960px) {
+    .analytics-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="mb-4">
+  <h1 class="h2 fw-bold">Analytics</h1>
+  <p class="text-secondary">Visualize your fitness journey and track performance trends.</p>
+</header>
+
+<div class="analytics-grid">
+  <section class="analytics-card" aria-labelledby="muscle-balance-heading">
+    <h2 id="muscle-balance-heading">Muscle Balance</h2>
+    <p class="text-secondary">Training Distribution</p>
+    <div class="radar-wrap">
+      <canvas id="muscleBalanceChart" role="img"
+        aria-label="Radar chart showing muscle balance across chest, back, shoulders, arms, legs and glutes, and core."></canvas>
+    </div>
+    <div class="visually-hidden" id="muscle-balance-labels">
+      Chest, Back, Shoulders, Arms, Legs &amp; Glutes, Core
+    </div>
+  </section>
+
+  <section class="analytics-card" aria-labelledby="records-heading">
+    <h2 id="records-heading">Personal Records</h2>
+    <p class="text-secondary">Your best lifts by region</p>
+    <div class="records-grid">
+      {% for log in logs %}
+      <div class="record-item">
+        <div class="record-label">
+          <strong>{{ log.exercise.category }}</strong>
+          <span>{{ log.exercise.name }} ({{ log.date }})</span>
+        </div>
+        <div class="record-weight">{{ log.weight }} kg</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<script id="analytics-data" type="application/json">
+    {
+    "weightLabels": {{ weight_labels_json|default:"[]"|safe }},
+    "weightValues": {{ weight_values_json|default:"[]"|safe }},
+    "volumeLabels": {{ volume_labels_json|default:"[]"|safe }},
+    "volumeValues": {{ volume_values_json|default:"[]"|safe }},
+    "muscleBalanceLabels": {{ muscle_balance_labels_json|default:"[]"|safe }},
+    "muscleBalanceValues": {{ muscle_balance_values_json|default:"[]"|safe }}
+    }
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{% static 'js/analytics.js' %}"></script>
+{% endblock %}

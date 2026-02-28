@@ -1,0 +1,300 @@
+:root {
+    --ink: #1b1b1f;
+    --ink-muted: #6a6d7a;
+    --surface: #ffffff;
+    --surface-alt: #f1f3f8;
+    --stroke: #e3e6ef;
+    --accent: #2f5cff;
+    --accent-soft: #e5ebff;
+    --shadow: 0 18px 40px rgba(20, 27, 45, 0.08);
+}
+
+body {
+    margin: 0;
+    font-family: "Space Grotesk", "IBM Plex Mono", sans-serif;
+    background: radial-gradient(circle at 20% 20%, #eef2ff 0%, #f8f9fc 35%, #f5f6fa 100%);
+    color: var(--ink);
+}
+
+.program-builder-grid {
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) 1fr;
+    gap: 24px;
+    width: 100%;
+    padding: 24px;
+}
+
+.exercise-library-panel,
+.week-plan-panel {
+    background: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 14px;
+    background: var(--surface-alt);
+    outline: none;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(47, 92, 255, 0.12);
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    border: 1px solid var(--stroke);
+    background: #fff;
+    color: var(--ink-muted);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tag.active,
+.tag:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.exercise-list {
+    display: grid;
+    gap: 12px;
+}
+
+.exercise-item-card {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--stroke);
+    border-radius: 16px;
+    padding: 12px 14px;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+}
+
+.exercise-item-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(27, 27, 31, 0.08);
+    border-color: #d7dcf0;
+}
+
+.exercise-item-card:focus-visible {
+    outline: 3px solid rgba(47, 92, 255, 0.4);
+    outline-offset: 2px;
+}
+
+.exercise-info strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.exercise-info small {
+    color: var(--ink-muted);
+    font-size: 12px;
+}
+
+.drag-handle {
+    color: var(--ink-muted);
+    font-size: 16px;
+}
+
+.week-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.week-header-row h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.p-btn {
+    border: 1px solid var(--stroke);
+    background: #fff;
+    border-radius: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.p-btn.active,
+.p-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.instruction-subtext {
+    margin: 10px 0 0;
+    color: var(--ink-muted);
+    font-size: 13px;
+}
+
+.plan-status {
+    min-height: 18px;
+    margin-top: 10px;
+    color: #aa3b3b;
+    font-size: 12px;
+}
+
+.week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+.day-column {
+    border-radius: 20px;
+    border: 1px dashed #d7dcf0;
+    padding: 14px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.day-column.rest-day {
+    background: #f5f6fb;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+}
+
+.day-header small {
+    color: var(--ink-muted);
+    font-size: 12px;
+}
+
+.day-date-line {
+    font-size: 12px;
+    color: var(--ink-muted);
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: var(--surface-alt);
+}
+
+.day-date-line.is-today {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.day-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.plan-list {
+    display: grid;
+    gap: 8px;
+}
+
+.workout-card-mini {
+    background: #f9fafe;
+    border-radius: 14px;
+    padding: 10px;
+    border: 1px solid #eef1ff;
+}
+
+.workout-title {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+
+.scheduled-exercise {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    padding: 6px 8px;
+    font-size: 12px;
+    border: 1px solid var(--stroke);
+}
+
+.ex-name {
+    font-weight: 600;
+}
+
+.ex-details {
+    color: var(--ink-muted);
+}
+
+.add-exercise-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-exercise-btn[disabled] {
+    background: #f1f1f1;
+    color: #b6b8c4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 1200px) {
+    .program-builder-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .week-grid {
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    .week-grid {
+        grid-template-columns: 1fr;
+    }
+}

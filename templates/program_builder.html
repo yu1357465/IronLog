@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Program Builder - IronFlow Pro{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/program_builder.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="program-builder-grid">
+
+  <div class="exercise-library-panel p-4">
+    <div class="panel-header">
+      <h3>Exercise Library</h3>
+    </div>
+
+    <div class="search-container mt-3">
+      <input id="exercise-search" type="search" placeholder="Search exercises (e.g., squat)" class="search-input"
+        autocomplete="off" aria-label="Search exercises">
+    </div>
+
+    <div class="filter-tags mt-3" role="tablist" aria-label="Exercise filters">
+      <button class="tag active" type="button" data-filter="all" role="tab" aria-selected="true">All</button>
+      <button class="tag" type="button" data-filter="chest" role="tab">Chest</button>
+      <button class="tag" type="button" data-filter="back" role="tab">Back</button>
+      <button class="tag" type="button" data-filter="shoulders" role="tab">Shoulders</button>
+      <button class="tag" type="button" data-filter="arms" role="tab">Arms</button>
+      <button class="tag" type="button" data-filter="legs_glutes" role="tab">Legs &amp; Glutes</button>
+      <button class="tag" type="button" data-filter="core" role="tab">Core</button>
+    </div>
+
+    <div class="exercise-list mt-4" id="exercise-list">
+      {% for ex in exercise_library %}
+      <button type="button" class="exercise-item-card" data-name="{{ ex.name }}" data-sub="{{ ex.sub }}"
+        data-category="{{ ex.category|default:'all'|lower }}" tabindex="0" aria-label="Add {{ ex.name }}">
+        <div class="exercise-info">
+          <strong>{{ ex.name }}</strong>
+          <small>{{ ex.sub }}</small>
+        </div>
+        <div class="drag-handle" aria-hidden="true">≡</div>
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="week-plan-panel p-4" data-week-num="{{ current_week_num|default:'0' }}"
+    data-year="{{ current_year|default:'2026' }}" data-week-start="{{ week_start_iso|default:'' }}">
+    <div class="week-header-row">
+      <h2 id="week-title">Week {{ current_week_num|default:'0' }}, {{ current_year|default:'2026' }} Plan</h2>
+      <div class="pagination-controls">
+        <button class="p-btn" type="button" id="prev-week" aria-label="Previous week">&lt;</button>
+        <button class="p-btn active" type="button" id="this-week" aria-label="This week">This Week</button>
+        <button class="p-btn" type="button" id="next-week" aria-label="Next week">&gt;</button>
+      </div>
+    </div>
+
+    <div class="plan-status" id="plan-status" aria-live="polite"></div>
+
+    <div class="week-grid mt-4" id="week-grid"></div>
+  </div>
+
+</div>
+
+<script id="program-data" type="application/json">
+  {
+    "weekNumber": {{ current_week_num|default:"0" }},
+    "year": {{ current_year|default:"2026" }},
+    "weekStartISO": "{{ week_start_iso|default:'' }}",
+    "weekDays": {{ week_days_json|default:"[]"|safe }}
+  }
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/program_builder.js' %}"></script>
+{% endblock %}
