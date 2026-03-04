@@ -10,68 +10,114 @@
 {% block content %}
 <div class="program-builder-grid">
 
+  <!-- ===== 左侧 Exercise Library ===== -->
   <div class="exercise-library-panel p-4">
     <div class="panel-header">
       <h3>Exercise Library</h3>
     </div>
 
     <div class="search-container mt-3">
-      <input id="exercise-search" type="search" placeholder="Search exercises (e.g., squat)" class="search-input"
-        autocomplete="off" aria-label="Search exercises">
+      <!-- 纯 SSR 不做动态搜索 -->
+      <input type="search" placeholder="Search exercises" class="search-input" disabled>
     </div>
 
-    <div class="filter-tags mt-3" role="tablist" aria-label="Exercise filters">
-      <button class="tag active" type="button" data-filter="all" role="tab" aria-selected="true">All</button>
-      <button class="tag" type="button" data-filter="chest" role="tab">Chest</button>
-      <button class="tag" type="button" data-filter="back" role="tab">Back</button>
-      <button class="tag" type="button" data-filter="shoulders" role="tab">Shoulders</button>
-      <button class="tag" type="button" data-filter="arms" role="tab">Arms</button>
-      <button class="tag" type="button" data-filter="legs_glutes" role="tab">Legs &amp; Glutes</button>
-      <button class="tag" type="button" data-filter="core" role="tab">Core</button>
+    <div class="filter-tags mt-3">
+      <span class="tag active">All</span>
     </div>
 
-    <div class="exercise-list mt-4" id="exercise-list">
+    <div class="exercise-list mt-4">
       {% for ex in exercise_library %}
-      <button type="button" class="exercise-item-card" data-name="{{ ex.name }}" data-sub="{{ ex.sub }}"
-        data-category="{{ ex.category|default:'all'|lower }}" tabindex="0" aria-label="Add {{ ex.name }}">
+      <div class="exercise-item-card">
         <div class="exercise-info">
           <strong>{{ ex.name }}</strong>
           <small>{{ ex.sub }}</small>
         </div>
-        <div class="drag-handle" aria-hidden="true">≡</div>
-      </button>
+        <div class="drag-handle">≡</div>
+      </div>
+      {% empty %}
+      <p>No exercises available.</p>
       {% endfor %}
     </div>
   </div>
 
-  <div class="week-plan-panel p-4" data-week-num="{{ current_week_num|default:'0' }}"
-    data-year="{{ current_year|default:'2026' }}" data-week-start="{{ week_start_iso|default:'' }}">
+  <!-- ===== 右侧 Week Plan ===== -->
+  <div class="week-plan-panel p-4">
+
     <div class="week-header-row">
-      <h2 id="week-title">Week {{ current_week_num|default:'0' }}, {{ current_year|default:'2026' }} Plan</h2>
+      <h2>
+        Week {{ current_week_num }}, {{ current_year }} Plan
+      </h2>
+
       <div class="pagination-controls">
-        <button class="p-btn" type="button" id="prev-week" aria-label="Previous week">&lt;</button>
-        <button class="p-btn active" type="button" id="this-week" aria-label="This week">This Week</button>
-        <button class="p-btn" type="button" id="next-week" aria-label="Next week">&gt;</button>
+        <a class="p-btn" href="?week={{ prev_week }}&year={{ current_year }}">
+          &lt;
+        </a>
+
+        <a class="p-btn active" href="?week={{ current_week_num }}&year={{ current_year }}">
+          This Week
+        </a>
+
+        <a class="p-btn" href="?week={{ next_week }}&year={{ current_year }}">
+          &gt;
+        </a>
       </div>
     </div>
 
-    <div class="plan-status" id="plan-status" aria-live="polite"></div>
+    <p class="instruction-subtext">
+      Weekly schedule generated server-side.
+    </p>
 
-    <div class="week-grid mt-4" id="week-grid"></div>
+    <div class="week-grid mt-4">
+
+      {% for day in week_days %}
+      <div class="day-column {% if day.is_rest %}rest-day{% endif %}">
+
+        <div class="day-header">
+          <strong>{{ day.day_name }}</strong>
+          <small>{{ day.date }}</small>
+        </div>
+
+        <div class="day-date-line {% if day.is_today %}is-today{% endif %}">
+          {{ day.full_date }}
+        </div>
+
+        <div class="day-content">
+
+          {% if day.exercises %}
+          <div class="plan-list">
+            {% for workout in day.exercises %}
+            <div class="workout-card-mini">
+
+              <span class="workout-title">
+                {{ workout.title }}
+              </span>
+
+              {% for ex in workout.items %}
+              <div class="scheduled-exercise">
+                <span class="ex-name">{{ ex.name }}</span>
+                <span class="ex-details">
+                  {{ ex.sets }} × {{ ex.reps }}
+                </span>
+              </div>
+              {% endfor %}
+
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="day-content">
+            <small>No workout planned</small>
+          </div>
+          {% endif %}
+
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
   </div>
 
 </div>
-
-<script id="program-data" type="application/json">
-  {
-    "weekNumber": {{ current_week_num|default:"0" }},
-    "year": {{ current_year|default:"2026" }},
-    "weekStartISO": "{{ week_start_iso|default:'' }}",
-    "weekDays": {{ week_days_json|default:"[]"|safe }}
-  }
-</script>
-{% endblock %}
-
-{% block extra_js %}
-<script src="{% static 'js/program_builder.js' %}"></script>
 {% endblock %}

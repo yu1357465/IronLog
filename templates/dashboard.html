@@ -25,7 +25,7 @@
         <span>{{ weekly_sessions }}</span> / 7 day
       </div>
       <div class="progress-track">
-        <div class="progress-fill" style="width: {{ weekly_progress }}%;"></div>
+        <div class="progress-fill" style="width: {{ weekly_progress|default:0 }}%;"></div>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
       <p class="stat-label">Weight</p>
       <label class="stat-value weight-input" aria-label="Weight input">
         <span>Weight</span>
-        <input type="number" inputmode="decimal" step="0.1" value="{{ weight_value|default:0|floatformat:1 }}">
+        <input type="number" step="0.1" value="{{ weight_value|default:0|floatformat:1 }}">
         <span>KG</span>
       </label>
       <div class="sparkline">
@@ -118,6 +118,7 @@
         </tr>
       </thead>
       <tbody>
+        {% if logs %}
         {% for log in logs %}
         <tr>
           <td>{{ log.exercise.name }}</td>
@@ -127,6 +128,11 @@
           <td>{{ log.date }}</td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+          <td colspan="5">No training records yet.</td>
+        </tr>
+        {% endif %}
       </tbody>
     </table>
   </section>
