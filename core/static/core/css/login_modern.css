@@ -1,0 +1,56 @@
+/* --- IronFlow Pro Modern Login Styles --- */
+
+/* 1. Keyboard Navigation: High-visibility focus state 
+   落实准则 #1：确保键盘 Tab 键选中时，焦点清晰可见且符合美学
+*/
+:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 3px;
+    border-radius: 12px;
+}
+
+.input-custom:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); /* 扩散光晕 */
+}
+
+/* 2. Descriptive Error Handling: Inline red messages
+   落实准则 #2：Django 自动生成的错误列表样式
+*/
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 12px 0;
+    color: #ef4444; /* 醒目的红色 */
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.input-error {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+}
+
+/* 3. Semantic Form Labeling: Permanent visible labels
+   落实准则 #3：标签永远可见，不被 Placeholder 替代
+*/
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    cursor: pointer; /* 点击标签即可激活输入框 */
+}
+
+/* 其余现代 UI 样式保持不变... */
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    max-width: 440px;
+    width: 100%;
+}

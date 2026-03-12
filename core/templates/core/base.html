@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}IronFlow Pro - {{ page_title }}{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'core/css/global.css' %}">
+
+  {% block extra_css %}{% endblock %}
+
+  <style>
+    /* 强行解开所有框架可能存在的溢出隐藏限制 */
+    html, body {
+      height: 100%;
+      overflow-y: auto !important; /* 如果内容超长，必须给我显示滚动条！ */
+      overflow-x: hidden;
+    }
+
+    /* 确保主内容区域也能自由呼吸，不会剪裁内部的图表 */
+    .main-content, main {
+      overflow-y: visible !important;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app-container">
+
+  {% include "core/includes/sidebar.html" %}
+
+  <main class="main-area">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+</div>
+
+{% block extra_js %}{% endblock %}
+</body>
+
+</html>

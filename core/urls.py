@@ -15,4 +15,10 @@ urlpatterns=[
 
     #M3录入节点(Workout Logger)
     path('train/log/',views.workout_logger_view,name='workout_logger'),
+
+    # 新增这一行：专门用来接住前端的 {% url 'program_builder' %}
+    path('program-builder/', views.program_builder_view, name='program_builder'),
+
+    # 新增这一行：接住前端的 {% url 'analytics' %}
+    path('analytics/', views.analytics_view, name='analytics'),
 ]

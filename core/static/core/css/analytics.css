@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+
+{% block extra_css %}
+<style>
+.chart-wrapper {
+    height: 350px;
+}
+</style>
+{% endblock %}
