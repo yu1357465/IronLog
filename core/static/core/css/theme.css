@@ -1,0 +1,189 @@
+/* ========== Global Layout 全局布局 ========== */
+body.auth-body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f4f6fb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container 容器 */
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+/* ========== Brand Section 品牌区 ========== */
+.brand-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 12px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #7b5cff, #5b3df5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+}
+
+.brand-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.brand-subtitle {
+    margin: 4px 0 24px;
+    color: #777;
+    font-size: 14px;
+}
+
+/* ========== Card 卡片 ========== */
+.card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 20px 40px rgba(90, 70, 255, 0.12);
+    text-align: left;
+}
+
+.card-title {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ========== Form 表单 ========== */
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 12px 12px 12px 36px;
+    border-radius: 16px;
+    border: 1px solid #e2e5f1;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #7b5cff;
+}
+
+/* Focus Visible 高对比焦点 */
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid #7b5cff;
+    outline-offset: 2px;
+}
+
+/* Error 错误样式 */
+.error-message {
+    color: #d32f2f;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.global-error {
+    margin-bottom: 12px;
+}
+
+/* ========== Buttons 按钮 ========== */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #7b5cff, #5b3df5);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.92;
+}
+
+.btn-secondary {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 18px;
+    background: #f0f1f7;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.divider {
+    text-align: center;
+    margin: 16px 0;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.link {
+    font-size: 12px;
+    text-decoration: none;
+    color: #5b3df5;
+}
+
+.terms {
+    font-size: 11px;
+    text-align: center;
+    margin-top: 18px;
+    color: #999;
+}
+
+.terms a {
+    color: #5b3df5;
+    text-decoration: none;
+}
+
+.form-description {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 18px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.primary-btn {
+    background: linear-gradient(90deg, #6366f1, #9333ea);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 12px;
+}

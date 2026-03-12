@@ -1,0 +1,297 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  /* 【核心突破】：锁死全局页面，物理消灭外层滚动条 */
+  .analytics-page {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    height: calc(100vh - 24px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .analytics-topbar {
+    margin-bottom: 12px !important;
+    padding-bottom: 0 !important;
+    flex: 0 0 auto; /* 绝不压缩标题栏 */
+  }
+
+  /* 上半区网格：分配 45% 的高度给雷达图和记录榜单 */
+  .analytics-top-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 16px;
+    flex: 1 1 45%;
+    min-height: 0; /* 打破 Flexbox 默认限制 */
+    margin-bottom: 16px;
+  }
+
+  /* 下半区容器：分配 55% 的高度给折线图 */
+  .analytics-bottom-row {
+    flex: 1 1 55%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 统一的卡片海绵属性 */
+  .analytics-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #edf0f6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* 允许卡片向内收缩 */
+  }
+
+  .analytics-card h2 {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+    flex: 0 0 auto;
+  }
+  .analytics-card p.text-secondary {
+    margin: 0 0 12px 0;
+    font-size: 0.85rem;
+    flex: 0 0 auto;
+  }
+
+  /* 图表画布包裹层：必须是 relative 和 min-height: 0，否则 Chart.js 无法自适应 */
+  .radar-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .trends-canvas-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    width: 100%;
+  }
+
+  /* PR榜单内部滚动 */
+  .records-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto; /* 核心：PR太多时，只在这里内部滚动 */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 6px;
+  }
+
+  .record-item {
+    display: flex;
+    justify-content: space-between;
+    background: #f7f8fc;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    flex-shrink: 0; /* 防止单条记录被压扁 */
+  }
+
+  .record-label { display: flex; flex-direction: column; }
+  .record-label span { font-size: 11px; color: #6a6d7a; }
+
+  /* 手机端释放锁死限制 */
+  @media (max-width: 960px) {
+    .analytics-page { height: auto; overflow-y: auto; }
+    .analytics-top-grid { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .radar-wrap, .trends-canvas-wrap { min-height: 260px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analytics-page">
+  <header class="analytics-topbar dashboard-topbar">
+    <h1 style="font-size: 1.5rem; margin: 0; font-weight: 700; color: #111827;">Analytics</h1>
+  </header>
+
+  <div class="analytics-top-grid">
+    <section class="analytics-card">
+      <h2 style="display: flex; align-items: center; gap: 6px;">⚖️ Muscle Balance</h2>
+      <div class="radar-wrap">
+        <canvas id="muscleBalanceChart"></canvas>
+      </div>
+    </section>
+
+    <section class="analytics-card">
+      <h2 style="display: flex; align-items: center; gap: 6px;">👑 Personal Records</h2>
+      <p class="text-secondary">Your best lifts by region</p>
+
+      <div class="records-grid">
+        {% for log in logs %}
+        <div class="record-item">
+          <div class="record-label">
+            <strong>{{ log.exercise.category }}</strong>
+            <span>{{ log.exercise.name }} ({{ log.date|date:"Y-m-d" }})</span>
+          </div>
+          <div>{{ log.weight }} kg</div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: #9CA3AF; margin-top: 20px; font-size: 0.9rem;">No records yet.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <div class="analytics-bottom-row">
+    <section class="analytics-card" style="flex: 1 1 auto; margin-bottom: 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px; flex: 0 0 auto;">
+        <div>
+          <h2 style="margin-bottom: 4px;">Progress Trends</h2>
+          <p class="text-secondary" style="margin: 0; font-size: 0.9rem;">Track your weight history over time</p>
+        </div>
+
+        <select id="trendSelector" style="padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.9rem; background-color: white; color: #111827; color-scheme: light; outline: none; min-width: 200px;">
+          {% if available_exercises %}
+          {% for ex in available_exercises %}
+          <option value="{{ ex }}">{{ ex }}</option>
+          {% endfor %}
+          {% else %}
+          <option value="">No data available</option>
+          {% endif %}
+        </select>
+      </div>
+
+      <div class="trends-canvas-wrap">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </section>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  // ==========================================
+  // 雷达图引擎 (Radar Chart Engine)
+  // ==========================================
+  const FIXED_LABELS = ["Chest", "Back", "Shoulders", "Arms", "Legs & Glutes", "Core"];
+  const backendValues = {{ muscle_balance_values|default:"[]"|safe }};
+  const finalValues = backendValues.length === FIXED_LABELS.length ? backendValues : [0,0,0,0,0,0];
+  const ctx = document.getElementById('muscleBalanceChart');
+
+  const maxUserValue = Math.max(...finalValues, 1);
+  const optimalValue = maxUserValue * 0.8;
+  const optimalData = [optimalValue, optimalValue, optimalValue, optimalValue, optimalValue, optimalValue];
+
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: FIXED_LABELS,
+      datasets: [
+        {
+          label: 'Your Volume',
+          data: finalValues,
+          fill: true,
+          backgroundColor: 'rgba(79, 70, 229, 0.25)',
+          borderColor: '#4F46E5',
+          pointBackgroundColor: '#4F46E5',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: '#4F46E5',
+          borderWidth: 2,
+          pointRadius: 4,
+          zIndex: 2
+        },
+        {
+          label: 'Optimal Balance',
+          data: optimalData,
+          fill: true,
+          backgroundColor: 'rgba(156, 163, 175, 0.08)',
+          borderColor: '#9CA3AF',
+          borderWidth: 1.5,
+          borderDash: [5, 5],
+          pointRadius: 0,
+          zIndex: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: -5 },
+      scales: {
+        r: {
+          min: 0,
+          angleLines: { color: '#F3F4F6' },
+          grid: { color: '#F3F4F6' },
+          ticks: { display: false },
+          pointLabels: { font: { size: 11, weight: '600' }, color: '#6B7280' }
+        }
+      },
+      plugins: {
+        legend: { display: true, position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { size: 10 } } },
+        tooltip: { backgroundColor: '#111827', cornerRadius: 8 }
+      }
+    }
+  });
+
+  // ==========================================
+  // 折线图引擎 (Line Chart Engine)
+  // ==========================================
+  const historyData = {{ history_data|default:"{}"|safe }};
+  const trendSelector = document.getElementById('trendSelector');
+  const trendCtx = document.getElementById('trendChart');
+  let trendChartInstance = null;
+
+  function renderTrendChart(exerciseName) {
+    if (!exerciseName || !historyData[exerciseName]) return;
+    const dataObj = historyData[exerciseName];
+    if (trendChartInstance) trendChartInstance.destroy();
+
+    trendChartInstance = new Chart(trendCtx, {
+      type: 'line',
+      data: {
+        labels: dataObj.dates,
+        datasets: [{
+          label: 'Weight (KG)',
+          data: dataObj.weights,
+          borderColor: '#4F46E5',
+          backgroundColor: 'rgba(79, 70, 229, 0.1)',
+          borderWidth: 3,
+          pointBackgroundColor: '#ffffff',
+          pointBorderColor: '#4F46E5',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#111827',
+            padding: 10,
+            cornerRadius: 8,
+            displayColors: false,
+            callbacks: { label: function(context) { return context.parsed.y + ' KG'; } }
+          }
+        },
+        scales: {
+          y: { beginAtZero: false, grid: { color: '#F3F4F6' }, border: { display: false } },
+          x: { grid: { display: false }, border: { display: false } }
+        }
+      }
+    });
+  }
+
+  if (trendSelector.value) renderTrendChart(trendSelector.value);
+  trendSelector.addEventListener('change', function(e) { renderTrendChart(e.target.value); });
+</script>
+{% endblock %}
