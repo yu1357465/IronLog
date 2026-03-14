@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@f1p+n=($(4=&96#o!&d72w3008j$x7-)^)mf)e3((#&arxi@_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ironlog.pythonanywhere.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -116,3 +116,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
