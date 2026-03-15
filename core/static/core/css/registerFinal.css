@@ -1,0 +1,18 @@
+.form-group,
+.input-wrapper,
+.input-wrapper input {
+  box-sizing: border-box !important;
+}
+
+.input-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+}
+
+.input-wrapper input {
+  width: 100% !important;
+  flex-grow: 1 !important;
+  min-width: 0 !important;
+}
+

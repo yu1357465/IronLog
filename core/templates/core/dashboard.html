@@ -5,56 +5,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
-<style>
-  /* 1. 终极容器护盾：高度锁死，物理消灭全局滚动条 */
-  .dashboard-page {
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-    height: calc(100vh - 24px);
-    max-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    gap: 16px !important;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  /* 2. 物理清除所有幽灵边距：绝对禁止外部 CSS 导致的重叠！ */
-  .dashboard-page section, .dashboard-page .card {
-    margin: 0 !important;
-    transform: none !important;
-    position: relative !important;
-    bottom: auto !important;
-    top: auto !important;
-  }
-
-  /* 3. 动作输入框高级样式 */
-  .pro-input::-webkit-outer-spin-button,
-  .pro-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .pro-input {
-    -moz-appearance: textfield; font-size: 1.1rem !important; padding: 8px !important;
-    font-weight: 600; color: #111827; border: 2px solid #E5E7EB !important; transition: all 0.2s;
-  }
-  .pro-input:focus { border-color: #4F46E5 !important; outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); }
-  .pro-title-input {
-    width: 100%; border: none; background: transparent; font-weight: 700; color: #111827; font-size: 0.95rem;
-    outline: none; transition: background 0.2s, padding 0.2s, box-shadow 0.2s; border-radius: 6px;
-  }
-  .pro-title-input:hover { background: #E5E7EB; padding-left: 6px; }
-  .pro-title-input:focus { background: #ffffff; box-shadow: 0 0 0 2px #4F46E5; padding-left: 6px; }
-
-  /* 4. 热力图自适应网格覆盖：强迫格子与月份完美对齐 */
-  .heatmap-cell {
-    width: 100% !important;
-    height: 100% !important;
-    background-color: #F3F4F6;
-    border-radius: 2px;
-    min-height: 12px;
-  }
-  .heatmap-cell.active { background-color: #10B981 !important; }
-  .legend-off { background-color: #F3F4F6; width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
-  .legend-on { background-color: #10B981; width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -190,40 +140,8 @@
   </section>
 
 </div>
+{% endblock %}
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const quickLogForm = document.querySelector('.quick-log-form');
-    if (quickLogForm) {
-
-      // 防止回车键误触提交
-      quickLogForm.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') { event.preventDefault(); return false; }
-      });
-
-      // 监听表单的提交动作 (Submit Event)
-      quickLogForm.addEventListener('submit', function(event) {
-        const rows = quickLogForm.querySelectorAll('.exercise-row');
-        const checkedBoxes = quickLogForm.querySelectorAll('.done-checkbox:checked');
-
-        // 如果一个都没勾选，视为“一键全部完成”，直接放行发给后端
-        if (checkedBoxes.length === 0) {
-          return true;
-        }
-
-        // 如果勾选了部分动作，进入精准切割模式
-        rows.forEach(row => {
-          const checkbox = row.querySelector('.done-checkbox');
-
-          // 找出没打勾的那一行
-          if (!checkbox.checked) {
-            const inputs = row.querySelectorAll('input[type="text"], input[type="number"]');
-            // 强制添加 disabled 属性，让浏览器丢弃这些多余数据
-            inputs.forEach(input => input.disabled = true);
-          }
-        });
-      });
-      }
-  });
-</script>
+{% block extra_js %}
+<script src="{% static 'core/js/dashboard.js' %}"></script>
 {% endblock %}

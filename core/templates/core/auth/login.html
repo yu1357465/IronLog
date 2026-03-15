@@ -4,31 +4,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Login | IronFlow Pro</title>
+  <title>Login | IronLog</title>
   <link rel="stylesheet" href="{% static 'core/css/theme.css' %}">
-
-  <style>
-    /* 强制所有表单容器和内部元素采用 border-box 计算模式 */
-    .form-group,
-    .input-wrapper,
-    .input-wrapper input {
-      box-sizing: border-box !important;
-    }
-
-    /* 限制包裹层的绝对最大宽度 */
-    .input-wrapper {
-      width: 100% !important;
-      max-width: 100% !important;
-      display: flex !important;
-    }
-
-    /* 限制输入框：占据剩余空间，但绝不溢出 */
-    .input-wrapper input {
-      width: 100% !important;
-      flex-grow: 1 !important;
-      min-width: 0 !important; /* 极其底层的魔法：打破 Flexbox 的默认最小宽度限制 */
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
 </head>
 
 <body class="auth-body">
@@ -39,7 +17,7 @@
     <div class="brand-icon">
       <span class="icon-bolt">⚡</span>
     </div>
-    <h1 class="brand-title">IronFlow Pro</h1>
+    <h1 class="brand-title">IronLog</h1>
     <p class="brand-subtitle">Professional Training System</p>
   </div>
 

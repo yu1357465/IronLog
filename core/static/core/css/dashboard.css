@@ -193,14 +193,31 @@
 }
 
 .heatmap-cell {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #edf0f6;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #f3f4f6;
+    border-radius: 2px;
+    min-height: 12px;
 }
 
 .heatmap-cell.active {
-    background-color: #58b758;
+    background-color: #10b981 !important;
+}
+
+.legend-off {
+    background-color: #f3f4f6;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.legend-on {
+    background-color: #10b981;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    display: inline-block;
 }
 
 .heatmap-months {
@@ -296,4 +313,71 @@
     .heatmap-grid-wrap {
         grid-template-columns: 24px minmax(420px, 1fr);
     }
+}
+
+/* Extracted from core/templates/core/dashboard.html inline <style> */
+.dashboard-page {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    height: calc(100vh - 24px);
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 16px !important;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.dashboard-page section,
+.dashboard-page .card {
+    margin: 0 !important;
+    transform: none !important;
+    position: relative !important;
+    bottom: auto !important;
+    top: auto !important;
+}
+
+.pro-input::-webkit-outer-spin-button,
+.pro-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pro-input {
+    -moz-appearance: textfield;
+    font-size: 1.1rem !important;
+    padding: 8px !important;
+    font-weight: 600;
+    color: #111827;
+    border: 2px solid #e5e7eb !important;
+    transition: all 0.2s;
+}
+
+.pro-input:focus {
+    border-color: #4f46e5 !important;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+.pro-title-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    color: #111827;
+    font-size: 0.95rem;
+    outline: none;
+    transition: background 0.2s, padding 0.2s, box-shadow 0.2s;
+    border-radius: 6px;
+}
+
+.pro-title-input:hover {
+    background: #e5e7eb;
+    padding-left: 6px;
+}
+
+.pro-title-input:focus {
+    background: #ffffff;
+    box-shadow: 0 0 0 2px #4f46e5;
+    padding-left: 6px;
 }

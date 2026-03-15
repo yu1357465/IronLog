@@ -1,9 +1,124 @@
-{% extends "core/base.html" %}
+.main-content {
+    padding: 0 !important;
+}
 
-{% block extra_css %}
-<style>
+.analytics-page {
+    width: 100%;
+    padding: 12px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.analytics-topbar {
+    margin-bottom: 12px !important;
+    padding-bottom: 0 !important;
+    flex: 0 0 auto;
+}
+
+.analytics-top-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 16px;
+    flex: 1 1 45%;
+    min-height: 0;
+    margin-bottom: 16px;
+}
+
+.analytics-bottom-row {
+    flex: 1 1 55%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.analytics-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #edf0f6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.analytics-card h2 {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+    flex: 0 0 auto;
+}
+
+.analytics-card p.text-secondary {
+    margin: 0 0 12px 0;
+    font-size: 0.85rem;
+    flex: 0 0 auto;
+}
+
+.radar-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+}
+
+.trends-canvas-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    width: 100%;
+}
+
+.records-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 6px;
+}
+
+.record-item {
+    display: flex;
+    justify-content: space-between;
+    background: #f7f8fc;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.record-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.record-label span {
+    font-size: 11px;
+    color: #6a6d7a;
+}
+
+@media (max-width: 960px) {
+    .analytics-page {
+        height: auto;
+        overflow-y: auto;
+    }
+
+    .analytics-top-grid {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .radar-wrap,
+    .trends-canvas-wrap {
+        min-height: 260px;
+    }
+}
+
 .chart-wrapper {
     height: 350px;
 }
-</style>
-{% endblock %}

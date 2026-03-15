@@ -1,10 +1,10 @@
 <div class="sidebar">
-
+  {% with current_url=request.resolver_match.url_name|default:'' %}
   <div>
     <div class="logo">
       <div class="logo-icon">⚡</div>
       <div class="logo-text">
-        <h5>IronFlow Pro</h5>
+        <h5>IronLog</h5>
         <small>Training System</small>
       </div>
     </div>
@@ -12,15 +12,15 @@
     <div class="sidebar-divider"></div>
 
     <div class="nav-links mt-4">
-      <a href="{% url 'dashboard' %}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+      <a href="{% url 'dashboard' %}" class="nav-item {% if active_page == 'dashboard' or current_url == 'dashboard' %}active{% endif %}">
         📋 Dashboard
       </a>
 
-      <a href="{% url 'program_builder' %}" class="nav-item {% if active_page == 'program_builder' %}active{% endif %}">
+      <a href="{% url 'program_builder' %}" class="nav-item {% if active_page == 'program_builder' or current_url == 'program_builder' %}active{% endif %}">
         📅 Program Builder
       </a>
 
-      <a href="{% url 'analytics' %}" class="nav-item {% if active_page == 'analytics' %}active{% endif %}">
+      <a href="{% url 'analytics' %}" class="nav-item {% if active_page == 'analytics' or current_url == 'analytics' %}active{% endif %}">
         📊 Analytics
       </a>
     </div>
@@ -28,12 +28,12 @@
 
   <div class="user-section">
     <div class="user-card">
-      <div class="avatar">A</div>
+      <div class="avatar">{{ request.user.username|first|upper }}</div>
       <div>
-        <strong>{{ request.user.username }}</strong><br>
+        <strong>{{ request.user.username }}</strong>
       </div>
     </div>
-    <div class="sidebar-footer" style="margin-top: auto; padding-top: 20px;">
+    <div class="sidebar-footer">
       <form method="POST" action="{% url 'logout' %}" style="margin: 0; width: 100%;">
         {% csrf_token %}
         <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; background-color: #F3F4F6; color: #4B5563; border: 1px solid #E5E7EB; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#FEE2E2'; this.style.color='#EF4444'; this.style.borderColor='#FCA5A5';" onmouseout="this.style.backgroundColor='#F3F4F6'; this.style.color='#4B5563'; this.style.borderColor='#E5E7EB';">
@@ -43,5 +43,6 @@
       </form>
     </div>
   </div>
-
+  {% endwith %}
 </div>
+

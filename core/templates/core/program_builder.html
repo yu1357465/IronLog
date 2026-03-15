@@ -4,131 +4,7 @@
 {% block title %}Program Builder - IronFlow Pro{% endblock %}
 
 {% block extra_css %}
-<style>
-  /* 【核心修复】：移除死板的 height: 100vh 和 overflow: hidden，改为流体计算与最小高度兜底 */
-  /* 默认手机/小屏设备的样式（允许自然滚动） */
-  .builder-page {
-    padding-top: 12px !important; padding-bottom: 12px !important;
-    display: flex; flex-direction: column; min-height: 800px;
-  }
-
-  /* 【核心魔法】：当屏幕宽度大于 1024px (电脑端) 时，强行锁死外围，消灭双滚动条 */
-  @media (min-width: 1024px) {
-    /* 强行覆盖 base.html，锁死全局滚动 */
-    body { overflow: hidden !important; }
-
-    /* 让主内容区域刚好等于屏幕高度，绝不多出一像素 */
-    .main-content {
-      height: 100vh !important; min-height: 0 !important;
-      overflow: hidden !important; display: flex; flex-direction: column;
-    }
-
-    /* 看板页面填满剩余空间，内部消化滚动 */
-    .builder-page {
-      flex-grow: 1; min-height: 0 !important; height: auto !important;
-      padding-top: 0 !important; padding-bottom: 20px !important;
-    }
-  }
-  .builder-topbar { margin-bottom: 16px !important; padding-bottom: 0 !important; }
-
-  /* 左右分栏网格：左侧动作库，右侧七天排期 */
-  .builder-main-grid {
-    display: grid; grid-template-columns: 280px 1fr; gap: 20px;
-    flex-grow: 1; min-height: 0;
-  }
-
-  /* ====== 左侧：动作库 (Exercise Library) ====== */
-  .library-panel {
-    background: white; border-radius: 12px; padding: 20px;
-    display: flex; flex-direction: column; border: 1px solid #E5E7EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    /* 【核心魔法】：强行设定最大高度为屏幕高度减去导航栏，打破内容撑破现象 */
-    max-height: calc(100vh - 120px);
-    min-height: 0; /* 剥夺 Flexbox 默认的最小高度保底权 */
-  }
-  .search-input {
-    width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px;
-    background-color: #ffffff !important; color: #111827 !important;
-    font-size: 0.9rem; outline: none; transition: all 0.2s; margin-bottom: 16px;
-    /* 强制要求浏览器用亮色模式渲染原生下拉框 */
-    color-scheme: light !important;
-  }
-  .search-input:focus { border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-
-  /* 强行洗白原生 select 里的 option */
-  .search-input option {
-    background-color: #ffffff !important;
-    color: #111827 !important;
-  }
-
-  /* 动作卡片 */
-  .ex-lib-card {
-    padding: 12px; border: 1px solid #F3F4F6; border-radius: 8px; background: white;
-    margin-bottom: 8px; cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .ex-lib-card:hover { border-color: #C7D2FE; box-shadow: 0 2px 4px rgba(79,70,229,0.05); transform: translateY(-1px); }
-  .ex-icon-box {
-    width: 32px; height: 32px; background: #EEF2FF; color: #4F46E5;
-    border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;
-  }
-
-  /* ====== 右侧：周排期看板 (Week Plan Kanban) ====== */
-  .kanban-panel {
-    display: flex; flex-direction: column; min-width: 0;
-    /* 同理，给右侧也戴上紧箍咒，保证绝不越界 */
-    max-height: calc(100vh - 120px);
-    min-height: 0;
-  }
-  .kanban-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
-  }
-  .kanban-title { margin: 0; font-size: 1.5rem; color: #111827; }
-  .kanban-subtitle { color: #6B7280; font-size: 0.9rem; margin-top: 4px; }
-
-  /* 横向滚动的容器 */
-  .kanban-board {
-    display: flex; gap: 16px; overflow-x: auto; flex-grow: 1; min-height: 0; padding-bottom: 16px;
-  }
-  /* 自定义横向滚动条 */
-  .kanban-board::-webkit-scrollbar { height: 8px; }
-  .kanban-board::-webkit-scrollbar-track { background: #F3F4F6; border-radius: 4px; }
-  .kanban-board::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 4px; }
-
-  /* 每一天的列 (Column) */
-  .day-column {
-    min-width: 260px; width: 260px; background: #F9FAFB; border-radius: 12px;
-    border: 2px dashed #E5E7EB; display: flex; flex-direction: column; padding: 12px;
-  }
-  .day-column-header {
-    padding-bottom: 12px; border-bottom: 2px solid #E5E7EB; margin-bottom: 12px;
-  }
-  .day-name { font-weight: 800; color: #374151; font-size: 1.1rem; margin: 0; }
-
-  /* 每天列内部的计划标题输入框 */
-  .program-title-input {
-    width: 100%; border: none; background: transparent; font-weight: 700; color: #111827;
-    font-size: 0.95rem; outline: none; margin-top: 8px; padding: 4px 0; border-radius: 4px; transition: background 0.2s;
-  }
-  .program-title-input:hover { background: #E5E7EB; padding-left: 6px; }
-  .program-title-input:focus { background: white; box-shadow: 0 0 0 2px #4F46E5; padding-left: 6px; }
-
-  /* 列内部的动作卡片 */
-  .scheduled-ex-card {
-    background: white; border-radius: 8px; padding: 12px; margin-bottom: 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #F3F4F6;
-  }
-  .scheduled-ex-title { font-weight: 700; color: #111827; font-size: 0.9rem; margin-bottom: 6px; }
-  .scheduled-ex-meta { font-size: 0.8rem; color: #6B7280; font-weight: 600; }
-
-  /* 添加按钮 */
-  .add-ex-btn {
-    width: 100%; padding: 10px; background: transparent; border: 2px dashed #D1D5DB;
-    color: #6B7280; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;
-    margin-top: auto; /* 推到底部 */
-  }
-  .add-ex-btn:hover { border-color: #4F46E5; color: #4F46E5; background: #EEF2FF; }
-
-</style>
+<link rel="stylesheet" href="{% static 'core/css/program_builder.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -173,12 +49,12 @@
           <p class="kanban-subtitle">Click '+ Add Exercise' to schedule workouts for specific days.</p>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button type="button" onclick="saveAllChanges()" class="primary-btn" style="padding: 8px 16px; border-radius: 8px; font-weight: 600;">Save All Changes</button>
+          <button type="button" onclick="saveAllChanges()" class="builder-save-btn">Save All Changes</button>
 
           <form method="POST" action="{% url 'program_builder' %}" style="margin: 0;" onsubmit="return confirm('Are you sure you want to reset the entire week? All exercises will be permanently deleted.');">
             {% csrf_token %}
             <input type="hidden" name="action" value="reset_week">
-            <button type="submit" style="background: white; border: 1px solid #FCA5A5; color: #EF4444; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#FEF2F2'" onmouseout="this.style.backgroundColor='white'">Reset Week</button>
+            <button type="submit" class="builder-reset-btn">Reset Week</button>
           </form>
         </div>
       </div>
@@ -300,87 +176,8 @@
   <input type="hidden" name="action" value="save_week">
   <div id="saveWeekPayload"></div>
 </form>
+{% endblock %}
 
-<script>
-  function openExerciseModal(programId, dayName) {
-    document.getElementById('modalProgramId').value = programId;
-    document.getElementById('modalDayTitle').innerText = dayName;
-    document.getElementById('exerciseModal').style.display = 'flex';
-  }
-
-  function closeExerciseModal() {
-    document.getElementById('exerciseModal').style.display = 'none';
-  }
-
-  // 一键收集所有计划标题并发射的引擎
-  function saveAllChanges() {
-    const payloadDiv = document.getElementById('saveWeekPayload');
-    payloadDiv.innerHTML = ''; // 清空上一轮的缓存
-
-    // 抓取页面上所有的标题输入框
-    const titleInputs = document.querySelectorAll('.program-title-input');
-
-    titleInputs.forEach(input => {
-      const pid = input.getAttribute('data-pid');
-      const name = input.value;
-      // 生成伪装的数据包
-      payloadDiv.innerHTML += `<input type="hidden" name="p_id" value="${pid}">`;
-      payloadDiv.innerHTML += `<input type="hidden" name="p_name" value="${name}">`;
-    });
-
-    // 强制提交隐形表单
-    document.getElementById('saveWeekForm').submit();
-  }
-
-  // 极速前端动作搜索引擎
-  function filterLibrary() {
-    const searchInput = document.getElementById('exerciseSearchInput');
-    const filterText = searchInput.value.toLowerCase();
-    const cards = document.querySelectorAll('.ex-lib-card');
-
-    cards.forEach(card => {
-      const cardText = card.innerText.toLowerCase();
-      if (cardText.includes(filterText)) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  }
-
-  // 手工魔法框联动逻辑
-  const magicInput = document.getElementById('magicInput');
-  const magicDropdown = document.getElementById('magicDropdown');
-  const magicOptions = document.querySelectorAll('.magic-option');
-
-  magicInput.addEventListener('input', function() {
-    const filter = this.value.toLowerCase();
-    let hasVisible = false;
-
-    magicOptions.forEach(opt => {
-      const text = opt.innerText.toLowerCase();
-      if (text.includes(filter)) {
-        opt.style.display = 'block';
-        hasVisible = true;
-      } else {
-        opt.style.display = 'none';
-      }
-    });
-
-    magicDropdown.style.display = (hasVisible && filter.length > 0) ? 'block' : 'none';
-  });
-
-  function selectMagicOption(name) {
-    magicInput.value = name;
-    magicDropdown.style.display = 'none';
-  }
-
-  document.addEventListener('click', function(e) {
-    if (e.target !== magicInput) {
-      magicDropdown.style.display = 'none';
-    }
-  });
-
-</script>
-
+{% block extra_js %}
+<script src="{% static 'core/js/program_builderFinal.js' %}"></script>
 {% endblock %}

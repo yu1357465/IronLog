@@ -4,42 +4,26 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}IronFlow Pro - {{ page_title }}{% endblock %}</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}IronFlow Pro{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'core/css/theme.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/global.css' %}">
-
   {% block extra_css %}{% endblock %}
-
-  <style>
-    /* 强行解开所有框架可能存在的溢出隐藏限制 */
-    html, body {
-      height: 100%;
-      overflow-y: auto !important; /* 如果内容超长，必须给我显示滚动条！ */
-      overflow-x: hidden;
-    }
-
-    /* 确保主内容区域也能自由呼吸，不会剪裁内部的图表 */
-    .main-content, main {
-      overflow-y: visible !important;
-      min-height: 100vh;
-    }
-  </style>
 </head>
 
 <body>
+  <div class="app-container">
+    <aside class="app-sidebar">
+      {% include "core/includes/sidebar.html" %}
+    </aside>
 
-<div class="app-container">
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
 
-  {% include "core/includes/sidebar.html" %}
-
-  <main class="main-area">
-    {% block content %}
-    {% endblock %}
-  </main>
-
-</div>
-
-{% block extra_js %}{% endblock %}
+  <script src="{% static 'core/js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
 </body>
 
 </html>

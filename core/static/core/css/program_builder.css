@@ -43,18 +43,26 @@ body {
 
 .search-input {
     width: 100%;
-    border: 1px solid var(--stroke);
-    border-radius: 14px;
-    padding: 12px 14px;
-    font-size: 14px;
-    background: var(--surface-alt);
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    font-size: 0.9rem;
     outline: none;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+    color-scheme: light !important;
 }
 
 .search-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(47, 92, 255, 0.12);
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.search-input option {
+    background-color: #ffffff !important;
+    color: #111827 !important;
 }
 
 .filter-tags {
@@ -182,13 +190,14 @@ body {
 }
 
 .day-column {
-    border-radius: 20px;
-    border: 1px dashed #d7dcf0;
-    padding: 14px;
-    background: #fff;
+    min-width: 260px;
+    width: 260px;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 2px dashed #e5e7eb;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    padding: 12px;
 }
 
 .day-column.rest-day {
@@ -283,18 +292,263 @@ body {
     cursor: not-allowed;
 }
 
-@media (max-width: 1200px) {
-    .program-builder-grid {
-        grid-template-columns: 1fr;
+.builder-page {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 800px;
+}
+
+@media (min-width: 1024px) {
+    body {
+        overflow: hidden !important;
     }
 
-    .week-grid {
-        grid-template-columns: repeat(2, minmax(150px, 1fr));
+    .main-content {
+        height: 100vh !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .builder-page {
+        flex-grow: 1;
+        min-height: 0 !important;
+        height: auto !important;
+        padding-top: 0 !important;
+        padding-bottom: 20px !important;
     }
 }
 
-@media (max-width: 720px) {
-    .week-grid {
-        grid-template-columns: 1fr;
-    }
+.builder-topbar {
+    margin-bottom: 16px !important;
+    padding-bottom: 0 !important;
+}
+
+.builder-main-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.library-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    max-height: calc(100vh - 120px);
+    min-height: 0;
+}
+
+.ex-lib-card {
+    padding: 12px;
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+    background: white;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ex-lib-card:hover {
+    border-color: #c7d2fe;
+    box-shadow: 0 2px 4px rgba(79, 70, 229, 0.05);
+    transform: translateY(-1px);
+}
+
+.ex-icon-box {
+    width: 32px;
+    height: 32px;
+    background: #eef2ff;
+    color: #4f46e5;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.kanban-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    max-height: calc(100vh - 120px);
+    min-height: 0;
+}
+
+.kanban-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.kanban-title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #111827;
+}
+
+.kanban-subtitle {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.kanban-board {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    flex-grow: 1;
+    min-height: 0;
+    padding-bottom: 16px;
+}
+
+.kanban-board::-webkit-scrollbar {
+    height: 8px;
+}
+
+.kanban-board::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 4px;
+}
+
+.kanban-board::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.day-column {
+    min-width: 260px;
+    width: 260px;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 2px dashed #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+}
+
+.day-column-header {
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 12px;
+}
+
+.day-name {
+    font-weight: 800;
+    color: #374151;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.program-title-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    color: #111827;
+    font-size: 0.95rem;
+    outline: none;
+    margin-top: 8px;
+    padding: 4px 0;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.program-title-input:hover {
+    background: #e5e7eb;
+    padding-left: 6px;
+}
+
+.program-title-input:focus {
+    background: white;
+    box-shadow: 0 0 0 2px #4f46e5;
+    padding-left: 6px;
+}
+
+.scheduled-ex-card {
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f3f4f6;
+}
+
+.scheduled-ex-title {
+    font-weight: 700;
+    color: #111827;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.scheduled-ex-meta {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.add-ex-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 2px dashed #d1d5db;
+    color: #6b7280;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: auto;
+}
+
+.add-ex-btn:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+    background: #eef2ff;
+}
+
+.builder-save-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.builder-save-btn:hover {
+    background: linear-gradient(90deg, #6366f1, #9333ea);
+    border-color: #6366f1;
+    color: #ffffff;
+}
+
+.builder-reset-btn {
+    background: #ffffff;
+    border: 1px solid #fca5a5;
+    color: #ef4444;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.builder-reset-btn:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
 }
