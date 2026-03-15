@@ -1,0 +1,39 @@
+<div class="sidebar">
+
+  <div>
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">
+        <h5>IronFlow Pro</h5>
+        <small>Training System</small>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="nav-links mt-4">
+      <a href="{% url 'dashboard' %}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+        📋 Dashboard
+      </a>
+
+      <a href="{% url 'program_builder' %}" class="nav-item {% if active_page == 'program_builder' %}active{% endif %}">
+        📅 Program Builder
+      </a>
+
+      <a href="{% url 'analytics' %}" class="nav-item {% if active_page == 'analytics' %}active{% endif %}">
+        📊 Analytics
+      </a>
+    </div>
+  </div>
+
+  <div class="user-section">
+    <div class="user-card">
+      <div class="avatar">A</div>
+      <div>
+        <strong>{{ request.user.username }}</strong><br>
+      </div>
+    </div>
+    <button class="settings-btn">⚙ Settings</button>
+  </div>
+
+</div>

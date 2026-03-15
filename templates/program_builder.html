@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Program Builder - IronFlow Pro{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/program_builder.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="program-builder-grid">
+
+  <!-- ===== 左侧 Exercise Library ===== -->
+  <div class="exercise-library-panel p-4">
+    <div class="panel-header">
+      <h3>Exercise Library</h3>
+    </div>
+
+    <div class="search-container mt-3">
+      <!-- 纯 SSR 不做动态搜索 -->
+      <input type="search" placeholder="Search exercises" class="search-input" disabled>
+    </div>
+
+    <div class="filter-tags mt-3">
+      <span class="tag active">All</span>
+    </div>
+
+    <div class="exercise-list mt-4">
+      {% for ex in exercise_library %}
+      <div class="exercise-item-card">
+        <div class="exercise-info">
+          <strong>{{ ex.name }}</strong>
+          <small>{{ ex.sub }}</small>
+        </div>
+        <div class="drag-handle">≡</div>
+      </div>
+      {% empty %}
+      <p>No exercises available.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ===== 右侧 Week Plan ===== -->
+  <div class="week-plan-panel p-4">
+
+    <div class="week-header-row">
+      <h2>
+        Week {{ current_week_num }}, {{ current_year }} Plan
+      </h2>
+
+      <div class="pagination-controls">
+        <a class="p-btn" href="?week={{ prev_week }}&year={{ current_year }}">
+          &lt;
+        </a>
+
+        <a class="p-btn active" href="?week={{ current_week_num }}&year={{ current_year }}">
+          This Week
+        </a>
+
+        <a class="p-btn" href="?week={{ next_week }}&year={{ current_year }}">
+          &gt;
+        </a>
+      </div>
+    </div>
+
+    <p class="instruction-subtext">
+      Weekly schedule generated server-side.
+    </p>
+
+    <div class="week-grid mt-4">
+
+      {% for day in week_days %}
+      <div class="day-column {% if day.is_rest %}rest-day{% endif %}">
+
+        <div class="day-header">
+          <strong>{{ day.day_name }}</strong>
+          <small>{{ day.date }}</small>
+        </div>
+
+        <div class="day-date-line {% if day.is_today %}is-today{% endif %}">
+          {{ day.full_date }}
+        </div>
+
+        <div class="day-content">
+
+          {% if day.exercises %}
+          <div class="plan-list">
+            {% for workout in day.exercises %}
+            <div class="workout-card-mini">
+
+              <span class="workout-title">
+                {{ workout.title }}
+              </span>
+
+              {% for ex in workout.items %}
+              <div class="scheduled-exercise">
+                <span class="ex-name">{{ ex.name }}</span>
+                <span class="ex-details">
+                  {{ ex.sets }} × {{ ex.reps }}
+                </span>
+              </div>
+              {% endfor %}
+
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="day-content">
+            <small>No workout planned</small>
+          </div>
+          {% endif %}
+
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

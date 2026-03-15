@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+  <header class="dashboard-topbar">
+    <div class="breadcrumb">
+      <span>Home</span>
+      <span class="crumb-sep">&gt;</span>
+      <span>Dashboard</span>
+    </div>
+    <button class="help-btn" type="button">Help</button>
+  </header>
+
+  <section class="dashboard-stats">
+    <div class="card stat-card">
+      <p class="stat-label">Weekly Training</p>
+      <div class="stat-value">
+        <span>{{ weekly_sessions }}</span> / 7 day
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: {{ weekly_progress|default:0 }}%;"></div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <p class="stat-label">Weight</p>
+      <label class="stat-value weight-input" aria-label="Weight input">
+        <span>Weight</span>
+        <input type="number" step="0.1" value="{{ weight_value|default:0|floatformat:1 }}">
+        <span>KG</span>
+      </label>
+      <div class="sparkline">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-main-grid">
+    <div class="card heatmap-card">
+      <div class="card-header">
+        <div>
+          <h3>Training Heatmap</h3>
+          <p>Consistency Graph</p>
+        </div>
+        <div class="heatmap-legend">
+          <span>Less</span>
+          <span class="legend-dot legend-off"></span>
+          <span class="legend-dot legend-on"></span>
+          <span>More</span>
+        </div>
+      </div>
+
+      <div class="heatmap-scroll">
+        <div class="heatmap-grid-wrap">
+          <div class="heatmap-axis">
+            <span>Mon</span>
+            <span>Wed</span>
+            <span>Fri</span>
+          </div>
+          <div class="heatmap-grid">
+            {% if heatmap_data %}
+            {% for week in heatmap_data %}
+            {% for day in week %}
+            <div class="heatmap-cell {% if day == 1 %}active{% endif %}"></div>
+            {% endfor %}
+            {% endfor %}
+            {% else %}
+            {% with rows="xxxxxxx" cols="12345678901234567890123456789012345678901234567890123" %}
+            {% for _ in rows|make_list %}
+            {% for __ in cols|make_list %}
+            <div class="heatmap-cell"></div>
+            {% endfor %}
+            {% endfor %}
+            {% endwith %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="heatmap-months">
+        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+        <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+      </div>
+    </div>
+
+    <aside class="card workout-card">
+      <h3>Start Today's Workout</h3>
+      <button class="primary-btn" type="button">
+        Start: {{ todays_workout_title }}
+      </button>
+      <p class="workout-subtitle">Preview Exercises</p>
+      <ul class="workout-list">
+        {% for ex in todays_exercises %}
+        <li>{{ ex }}</li>
+        {% endfor %}
+      </ul>
+    </aside>
+  </section>
+
+  <section class="card recent-card">
+    <h3>Recent Activity</h3>
+    <table class="recent-table">
+      <thead>
+        <tr>
+          <th>Exercise</th>
+          <th>Category</th>
+          <th>Weight</th>
+          <th>Reps</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if logs %}
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.exercise.name }}</td>
+          <td>{{ log.exercise.category }}</td>
+          <td>{{ log.weight }} kg</td>
+          <td>{{ log.reps }}</td>
+          <td>{{ log.date }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td colspan="5">No training records yet.</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}
