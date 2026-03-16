@@ -5,6 +5,17 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
+
+<style>
+  .dynamic-workout-title {
+    font-size: 1.15rem;
+  }
+  .form-col-done-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -20,7 +31,7 @@
         <div>
           <div class="workout-title-wrapper">
             <a href="?day={{ prev_day }}" class="nav-arrow">◀</a>
-            <h3 class="dashboard-title" style="font-size: 1.15rem;">{{ todays_workout_title }}</h3>
+            <h3 class="dashboard-title dynamic-workout-title">{{ todays_workout_title }}</h3>
             <a href="?day={{ next_day }}" class="nav-arrow">▶</a>
           </div>
           <p class="workout-date-label">{{ day_label }}</p>
@@ -31,10 +42,12 @@
         {% csrf_token %}
         <div class="form-header-row">
           <div class="form-col-exercise">Exercise</div>
+          <div class="form-col-pr" title="Personal Record">🏆PR</div>
           <div class="form-col-weight">KG</div>
           <div class="form-col-sets">Sets</div>
           <div class="form-col-reps">Reps</div>
-          <div class="form-col-done" style="display: flex; align-items: center; gap: 4px;">
+
+          <div class="form-col-done form-col-done-wrapper">
             Done
             <div class="pb-tooltip">
               <span class="pb-tooltip-icon">?</span>
@@ -47,10 +60,19 @@
           {% if todays_exercises %}
           {% for p_ex in todays_exercises %}
           <div class="exercise-row">
+
             <div class="pro-label">
               <span class="pro-index">{{ forloop.counter }}.</span>
-              <input type="text" name="exercise_name" value="{{ p_ex.exercise.name }}" class="pro-title-input">
+              <span class="pro-title-text">{{ p_ex.exercise.name }}</span>
+              <input type="hidden" name="exercise_name" value="{{ p_ex.exercise.name }}">
             </div>
+
+            <div class="form-col-pr">
+              {% if p_ex.pr_weight %}
+              <span class="pro-pr-value">{{ p_ex.pr_weight }} KG</span>
+              {% endif %}
+            </div>
+
             <div class="form-col-weight">
               <input type="number" step="0.5" name="weight" value="{{ p_ex.target_weight|default_if_none:'' }}" placeholder="KG" class="pro-input">
             </div>
@@ -140,10 +162,18 @@
         </div>
         <div class="heatmap-grid">
           {% if heatmap_data %}
-          {% for week in heatmap_data %}{% for day in week %}<div class="heatmap-cell {% if day == 1 %}active{% endif %}"></div>{% endfor %}{% endfor %}
+          {% for week in heatmap_data %}
+          {% for day in week %}
+          <div class="heatmap-cell {% if day == 1 %}active{% endif %}"></div>
+          {% endfor %}
+          {% endfor %}
           {% else %}
           {% with rows="xxxxxxx" cols="12345678901234567890123456789012345678901234567890123" %}
-          {% for _ in rows|make_list %}{% for __ in cols|make_list %}<div class="heatmap-cell"></div>{% endfor %}{% endfor %}
+          {% for _ in rows|make_list %}
+          {% for __ in cols|make_list %}
+          <div class="heatmap-cell"></div>
+          {% endfor %}
+          {% endfor %}
           {% endwith %}
           {% endif %}
         </div>
@@ -156,42 +186,8 @@
   </section>
 
 </div>
+{% endblock %}
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById('workoutLogForm');
-
-    if (form) {
-      form.addEventListener('submit', function (e) {
-        const allRows = document.querySelectorAll('.exercise-row');
-        let checkedCount = 0;
-
-        // 第一遍扫描：统计有多少个复选框被勾选了
-        allRows.forEach(row => {
-          const checkbox = row.querySelector('.done-checkbox');
-          if (checkbox && checkbox.checked) {
-            checkedCount++;
-          }
-        });
-
-        // 智能决策：如果勾选数大于 0，开启精准过滤模式
-        if (checkedCount > 0) {
-          allRows.forEach(row => {
-            const checkbox = row.querySelector('.done-checkbox');
-            // 如果这个动作没被勾选
-            if (!checkbox || !checkbox.checked) {
-              // 物理冻结：找到这行里所有的 input，打上 disabled 封条
-              const inputs = row.querySelectorAll('input');
-              inputs.forEach(input => {
-                input.disabled = true;
-              });
-            }
-          });
-        }
-        // 如果 checkedCount === 0，这段逻辑就不会执行，所有数据正常放行
-        // 拦截器处理完毕，卡车正式发车！
-      });
-    }
-  });
-</script>
+{% block extra_js %}
+<script src="{% static 'core/js/dashboard.js' %}"></script>
 {% endblock %}

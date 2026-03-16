@@ -1,10 +1,14 @@
+/**
+ * core/static/core/js/program_builderFinal.js
+ */
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. 弹窗控制逻辑 (Modal Control)
+
+  // 1. Modal Control
   const modal = document.getElementById('exerciseModal');
   const modalProgramId = document.getElementById('modalProgramId');
   const modalDayTitle = document.getElementById('modalDayTitle');
 
-  // 监听所有“添加动作”按钮
+  // Pass the specific day and program ID to the pop-up so the new exercise goes to the correct list.
   document.querySelectorAll('.add-ex-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       modalProgramId.value = this.getAttribute('data-pid');
@@ -13,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 监听关闭按钮
   const closeBtn = document.getElementById('closeModalBtn');
   if (closeBtn) {
     closeBtn.addEventListener('click', function() {
@@ -21,14 +24,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 2. 现代化改造：失焦自动保存逻辑 (Auto-Save on Blur / Change)
+  // 2. Auto-Save on Blur (Change)
+  // Intent: Prevent data loss. In reality, users often forget to click a manual save button.
+  // This waits for the user to finish typing and click away, then automatically saves all day titles at once.
   document.querySelectorAll('.program-title-input').forEach(input => {
-    // 监听 'change' 事件：当用户输入完内容，并且鼠标点到其他地方失去焦点时触发
     input.addEventListener('change', function() {
       const payloadDiv = document.getElementById('saveWeekPayload');
-      payloadDiv.innerHTML = ''; // 清空上一轮的缓存
+      payloadDiv.innerHTML = '';
 
-      // 抓取页面上所有的标题输入框，准备统一打包发送
       document.querySelectorAll('.program-title-input').forEach(inp => {
         const pid = inp.getAttribute('data-pid');
         const name = inp.value;
@@ -36,12 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
         payloadDiv.innerHTML += `<input type="hidden" name="p_name" value="${name}">`;
       });
 
-      // 隐藏式提交表单，触发页面瞬间刷新保存
       document.getElementById('saveWeekForm').submit();
     });
   });
 
-  // 3. 重置周计划的二次确认 (Reset Week Confirm)
+  // 3. Reset Week Confirmation
+  // Intent: Stop the form from sending immediately to ask for confirmation, because deleting a full week's data cannot be undone.
   const resetForm = document.getElementById('resetWeekForm');
   if (resetForm) {
     resetForm.addEventListener('submit', function(e) {
@@ -51,7 +54,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 4. 极速前端动作搜索引擎 (Library Filter)
+  // 4. Library Filter (Fast Search)
+  // Intent: Hide non-matching exercises instantly in the browser.
+  // Doing this locally is decisively faster and smoother than asking the server for new results every time a key is pressed.
   const searchInput = document.getElementById('exerciseSearchInput');
   if (searchInput) {
     searchInput.addEventListener('keyup', function() {
@@ -63,12 +68,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 5. 手工魔法框联动逻辑 (Magic Input Dropdown)
+  // 5. Magic Input Dropdown (Autocomplete)
   const magicInput = document.getElementById('magicInput');
   const magicDropdown = document.getElementById('magicDropdown');
   const magicOptions = document.querySelectorAll('.pb-magic-option');
 
   if (magicInput && magicDropdown) {
+    // Show matches as the user types.
     magicInput.addEventListener('input', function() {
       const filter = this.value.toLowerCase();
       let hasVisible = false;
@@ -86,14 +92,13 @@ document.addEventListener("DOMContentLoaded", function () {
       magicDropdown.style.display = (hasVisible && filter.length > 0) ? 'block' : 'none';
     });
 
-    // 点击下拉选项填入输入框
+    // Intent: When the user clicks a name, fill it in.
+    // Counter-intuitively, this also secretly updates the dropdown category behind the scenes, saving the user from doing it manually.
     magicOptions.forEach(opt => {
       opt.addEventListener('click', function() {
-        // 🚨 新增完整的双向回填逻辑
         magicInput.value = this.getAttribute('data-name');
-        const selectedCategory = this.getAttribute('data-category'); // 提取刚才埋好的分类数据
+        const selectedCategory = this.getAttribute('data-category');
 
-        // 精准制导：找到右侧的分类下拉框，并强制切换它的值
         const categoryDropdown = document.querySelector('select[name="new_exercise_category"]');
         if (categoryDropdown && selectedCategory) {
           categoryDropdown.value = selectedCategory;
@@ -103,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // 点击空白处收起下拉菜单
+    // Hide the dropdown if the user clicks anywhere else on the screen.
     document.addEventListener('click', function(e) {
       if (e.target !== magicInput) {
         magicDropdown.style.display = 'none';

@@ -1,22 +1,22 @@
 /* =========================================
-   Register 页面专属表单防御样式 (Separation of Concerns)
+   Registration Specific Form Constraints (Separation of Concerns)
    ========================================= */
 
-/* 强制所有表单容器和内部元素向内挤压，绝不向外膨胀 (border-box 计算模式) */
+/* Apply border-box sizing to ensure padding and borders do not expand form elements beyond their container width */
 .form-group,
 .input-wrapper,
 .input-wrapper input {
     box-sizing: border-box !important;
 }
 
-/* 死死限制外层包裹框的绝对最大宽度为 100% */
+/* Constrain the input wrapper to the parent container's width to prevent horizontal overflow */
 .input-wrapper {
     width: 100% !important;
     max-width: 100% !important;
     display: flex !important;
 }
 
-/* 限制输入框：占据剩余空间，打破默认最小宽度限制 */
+/* Override the default flexbox 'min-width: auto' behavior to allow the input field to shrink below its content size, preventing layout breaking on narrow screens */
 .input-wrapper input {
     width: 100% !important;
     flex-grow: 1 !important;

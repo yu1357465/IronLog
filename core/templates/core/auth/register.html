@@ -7,7 +7,6 @@
   <title>Register | IronLog</title>
 
   <link rel="stylesheet" href="{% static 'core/css/theme.css' %}">
-
   <link rel="stylesheet" href="{% static 'core/css/registerFinal.css' %}">
 </head>
 
@@ -28,6 +27,7 @@
     <h2 class="card-title">Create an Account</h2>
 
     <form method="post" action="{% url 'register' %}" novalidate>
+
       {% csrf_token %}
 
       <div class="form-group">
@@ -51,6 +51,7 @@
 
         <div class="input-wrapper">
           <span class="input-icon">🔒</span>
+
           <input type="password" name="password1" id="id_password1" required autocomplete="new-password">
         </div>
 

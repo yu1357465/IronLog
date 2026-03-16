@@ -5,6 +5,13 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/program_builder.css' %}">
+
+<style>
+  .ex-card-content { flex: 1; }
+  .pb-lib-del-form { margin: 0; }
+  .modal-category-select { flex: 1; }
+  .hidden-form { display: none; }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -16,6 +23,7 @@
   <div class="builder-main-grid">
     <div class="library-panel">
       <h3 class="pb-lib-title">Exercise Library</h3>
+
       <input type="text" id="exerciseSearchInput" class="search-input" placeholder="Search exercises (e.g. squat)">
 
       <div class="pb-lib-scroll">
@@ -23,13 +31,13 @@
         <div class="ex-lib-card">
           <div class="ex-icon-box">{{ ex.category|slice:":2"|upper }}</div>
 
-          <div style="flex: 1;">
+          <div class="ex-card-content">
             <div class="pb-card-title">{{ ex.name }}</div>
             <div class="pb-card-cat">{{ ex.category|default:"Custom" }}</div>
           </div>
 
           {% if ex.user %}
-          <form method="POST" action="{% url 'program_builder' %}" style="margin: 0;">
+          <form method="POST" action="{% url 'program_builder' %}" class="pb-lib-del-form">
             {% csrf_token %}
             <input type="hidden" name="action" value="delete_library_exercise">
             <input type="hidden" name="ex_id" value="{{ ex.id }}">
@@ -133,7 +141,7 @@
               {% endfor %}
             </div>
           </div>
-          <select name="new_exercise_category" class="search-input pb-input-nomargin" style="flex: 1;" title="Select category if creating a new exercise">
+          <select name="new_exercise_category" class="search-input pb-input-nomargin modal-category-select" title="Select category if creating a new exercise">
             <option value="Chest">Chest</option>
             <option value="Back">Back</option>
             <option value="Shoulders">Shoulders</option>
@@ -166,11 +174,13 @@
   </div>
 </div>
 
-<form method="POST" action="{% url 'program_builder' %}" id="saveWeekForm" style="display: none;">
+<form method="POST" action="{% url 'program_builder' %}" id="saveWeekForm" class="hidden-form">
   {% csrf_token %}
   <input type="hidden" name="action" value="save_week">
   <div id="saveWeekPayload"></div>
 </form>
+{% endblock %}
 
+{% block extra_js %}
 <script src="{% static 'core/js/program_builderFinal.js' %}"></script>
 {% endblock %}

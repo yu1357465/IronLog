@@ -3,6 +3,46 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/analytics.css' %}">
+
+<style>
+  .trend-search-container {
+    position: relative;
+    width: 100%;
+    max-width: 250px;
+  }
+  .trend-selector-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+  }
+  .trend-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e3e6ef;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
+    text-align: left;
+  }
+  /* CSS-driven hover states replace JS-based mouseenter/mouseleave events for better performance */
+  .trend-dropdown-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    color: #1b1b1f;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .trend-dropdown-item:hover {
+    background-color: #fef3c7;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -13,14 +53,14 @@
 
   <div class="analytics-top-grid">
     <section class="analytics-card">
-      <h2 class="card-title-wrap">⚖️ Muscle Balance</h2>
+      <h2 class="card-title-wrap"> Muscle Balance</h2>
       <div class="radar-wrap">
         <canvas id="muscleBalanceChart"></canvas>
       </div>
     </section>
 
     <section class="analytics-card">
-      <h2 class="card-title-wrap">👑 Personal Records</h2>
+      <h2 class="card-title-wrap">🏆 Personal Records</h2>
       <p class="card-subtitle">Your best lifts by region</p>
 
       <div class="records-list-modern">
@@ -44,8 +84,6 @@
   </div>
 
   <div class="analytics-bottom-row">
-
-  <div class="analytics-bottom-row">
     <section class="analytics-card analytics-card-bottom">
       <div class="trends-header">
         <div>
@@ -53,15 +91,14 @@
           <p class="trends-subtitle">Track your weight history over time</p>
         </div>
 
-        <select id="trendSelector" class="trend-selector">
-          {% if available_exercises %}
-          {% for ex in available_exercises %}
-          <option value="{{ ex }}">{{ ex }}</option>
-          {% endfor %}
-          {% else %}
-          <option value="">No data available</option>
-          {% endif %}
-        </select>
+        <div class="trend-search-container">
+          <input type="text" id="trendSelector" name="exercise"
+                 value="{% if available_exercises %}{{ available_exercises.0 }}{% endif %}"
+                 placeholder="Search exercise..." class="trend-selector pro-input trend-selector-input" autocomplete="off">
+
+          <div id="trendDropdown" class="trend-dropdown-menu"></div>
+        </div>
+
       </div>
 
       <div class="trends-canvas-wrap">
@@ -83,4 +120,58 @@
 </script>
 
 <script src="{% static 'core/js/analytics.js' %}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // Inject the dynamic vocabulary list provided by Django into the JS context
+    const vocabList = {{ available_exercises_json|default:"[]"|safe }};
+    const searchInput = document.getElementById('trendSelector');
+    const dropdown = document.getElementById('trendDropdown');
+
+    if (!searchInput || !dropdown) return;
+
+    // Mechanism (Client-side Filtering): Provide instant search feedback by filtering the injected payload directly in the browser, eliminating network latency.
+    searchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+      dropdown.innerHTML = '';
+
+      if (!query) {
+        dropdown.style.display = 'none';
+        return;
+      }
+
+      const matches = vocabList.filter(name => name.toLowerCase().includes(query));
+
+      if (matches.length > 0) {
+        dropdown.style.display = 'block';
+        matches.forEach(match => {
+          const itemDiv = document.createElement('div');
+          itemDiv.textContent = match;
+
+          // Decision: Apply styles via semantic class names rather than inline cssText to respect CSS hierarchy.
+          itemDiv.className = 'trend-dropdown-item';
+
+          itemDiv.addEventListener('click', function() {
+            searchInput.value = match;
+            dropdown.style.display = 'none';
+
+            // Intent: Synthetically dispatch a 'change' event to notify external chart-rendering scripts (analytics.js) that the data source has been updated.
+            searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+          });
+          dropdown.appendChild(itemDiv);
+        });
+      } else {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    // UX Handling: Close the custom dropdown when the user clicks anywhere outside of it.
+    document.addEventListener('click', function(e) {
+      if (e.target !== searchInput && e.target !== dropdown) {
+        dropdown.style.display = 'none';
+      }
+    });
+  });
+</script>
 {% endblock %}

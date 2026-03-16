@@ -2,8 +2,8 @@ from django import forms
 from .models import WorkoutLog
 
 class WorkoutLogForm(forms.ModelForm):
-    """训练日志验证器。它负责将前端传来的杂乱字符串,安全地转化为后端的python对象"""
+    # Decision: Use Django's ModelForm to automatically handle user input validation.
+    # Intent: Prevent invalid data from breaking the database by ensuring all user inputs meet the model's strict rules before saving.
     class Meta:
-        model=WorkoutLog
-        #暴露给前端的字段
-        fields=['exercise','weight','reps']
+        model = WorkoutLog
+        fields = ['exercise', 'weight', 'reps']

@@ -1,4 +1,6 @@
-/* ========== Global Layout 全局布局 ========== */
+/* =========================================
+   Global Layout Constraints
+   ========================================= */
 body.auth-body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -9,20 +11,22 @@ body.auth-body {
     height: 100vh;
 }
 
-/* Container 容器 */
+/* Constrain authentication forms to a readable maximum width to prevent excessive eye scanning */
 .auth-container {
     width: 100%;
     max-width: 420px;
     text-align: center;
 }
 
-/* ========== Brand Section 品牌区 ========== */
+/* =========================================
+   Brand Identity Section
+   ========================================= */
 .brand-icon {
     width: 56px;
     height: 56px;
     margin: 0 auto 12px;
     border-radius: 18px;
-    /* 🚨 修复: 移除紫色渐变，统一使用纯正 IronLog 蓝 */
+    /* Establish brand consistency by enforcing the primary IronLog blue */
     background: #2f5cff;
     display: flex;
     justify-content: center;
@@ -43,12 +47,14 @@ body.auth-body {
     font-size: 14px;
 }
 
-/* ========== Card 卡片 ========== */
+/* =========================================
+   Card Component Sizing & Elevation
+   ========================================= */
 .card {
     background: white;
-    border-radius: 16px; /* 统一圆角 */
+    border-radius: 16px;
     padding: 24px;
-    /* 🚨 修复: 移除紫色阴影，替换为蓝色透明阴影 */
+    /* Align optical shadow color with the primary brand identity rather than generic gray */
     box-shadow: 0 10px 30px rgba(47, 92, 255, 0.08);
     text-align: left;
 }
@@ -59,7 +65,9 @@ body.auth-body {
     font-weight: 600;
 }
 
-/* ========== Form 表单 ========== */
+/* =========================================
+   Form Architecture & Interactions
+   ========================================= */
 .form-group {
     margin-bottom: 18px;
 }
@@ -95,20 +103,19 @@ input {
 
 input:focus {
     outline: none;
-    /* 🚨 修复: 输入框激活边框变蓝 */
+    /* Provide clear visual feedback matching the brand palette upon user interaction */
     border-color: #2f5cff;
 }
 
-/* Focus Visible 高对比焦点 */
+/* Accessibility (A11y): Maintain high-contrast focus rings for keyboard navigation */
 input:focus-visible,
 button:focus-visible,
 a:focus-visible {
-    /* 🚨 修复: Tab键切换时的外轮廓线变蓝 */
     outline: 3px solid #2f5cff;
     outline-offset: 2px;
 }
 
-/* Error 错误样式 */
+/* Descriptive Error Handling */
 .error-message {
     color: #d32f2f;
     font-size: 12px;
@@ -124,7 +131,9 @@ a:focus-visible {
     text-align: right;
 }
 
-/* ========== Buttons 按钮 ========== */
+/* =========================================
+   Call-to-Action (CTA) Buttons & Links
+   ========================================= */
 .btn-primary {
     width: 100%;
     padding: 12px;
@@ -132,7 +141,7 @@ a:focus-visible {
     border-radius: 18px;
     background: #2f5cff;
     color: white;
-    /* 🚨 修复 5：强制写死大小，确保与下面一致 */
+    /* Standardize typographic scale for primary and secondary actions to ensure visual hierarchy */
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -147,13 +156,11 @@ a:focus-visible {
     display: block;
     text-align: center;
     padding: 12px;
-    /* 🚨 移除或者减小不必要的 margin-top 如果前面删了 divider */
     margin-top: 16px;
     border-radius: 18px;
     background: #f0f1f7;
     text-decoration: none;
     color: #333;
-    /* 🚨 修复 5：强制统一大小和字重 */
     font-size: 15px;
     font-weight: 600;
 }
@@ -168,7 +175,7 @@ a:focus-visible {
 .link {
     font-size: 12px;
     text-decoration: none;
-    /* 🚨 修复: 忘记密码等链接颜色变蓝 */
+    /* Unify text link colors with the global accent color */
     color: #2f5cff;
 }
 
@@ -180,7 +187,6 @@ a:focus-visible {
 }
 
 .terms a {
-    /* 🚨 修复: 条款链接颜色变蓝 */
     color: #2f5cff;
 }
 
@@ -191,7 +197,6 @@ a:focus-visible {
 }
 
 .primary-btn {
-    /* 🚨 修复: 底部遗留的紫红渐变色统一改蓝 */
     background: #2f5cff;
     color: white;
     padding: 14px 20px;

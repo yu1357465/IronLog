@@ -1,8 +1,4 @@
-/* =========================================
-   Analytics 页面专属分离样式
-   ========================================= */
-
-/* 1. 锁死全局页面，物理消灭外层滚动条 */
+/* Lock the viewport height to prevent document-level scrolling, creating a native app-like dashboard experience */
 .analytics-page {
     padding-top: 12px !important;
     padding-bottom: 12px !important;
@@ -23,7 +19,7 @@
     font-size: 1.5rem; margin: 0; font-weight: 700; color: #111827;
 }
 
-/* 2. 网格与布局容器 */
+/* Utilize CSS Grid for the top widgets to ensure consistent sizing and flexible distribution of space */
 .analytics-top-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(280px, 1fr));
@@ -40,7 +36,7 @@
     flex-direction: column;
 }
 
-/* 3. 统一卡片属性 */
+/* Standardize card aesthetics to maintain UI consistency across the dashboard */
 .analytics-card {
     background: #fff;
     border-radius: 12px;
@@ -62,7 +58,7 @@
     margin: 0 0 12px 0; font-size: 0.85rem; flex: 0 0 auto; color: #6B7280;
 }
 
-/* 4. 图表画布包裹层 (Chart.js 必需) */
+/* Relative positioning and flexbox constraints required by Chart.js to maintain responsive canvas resizing */
 .radar-wrap {
     flex: 1 1 auto;
     min-height: 0;
@@ -78,7 +74,6 @@
     width: 100%;
 }
 
-/* 5. PR 榜单与下拉框 UI */
 .records-grid {
     flex: 1 1 auto;
     min-height: 0;
@@ -118,30 +113,27 @@
 }
 .trend-selector:focus { border-color: #4F46E5; }
 
-/* 6. 响应式释放锁死限制 */
+/* Release viewport height constraints on mobile devices to allow natural vertical scrolling for stacked content */
 @media (max-width: 960px) {
     .analytics-page { height: auto; overflow-y: auto; }
     .analytics-top-grid { grid-template-columns: 1fr; display: flex; flex-direction: column; }
     .radar-wrap, .trends-canvas-wrap { min-height: 260px; }
 }
 
-/* =========================================
-   高级卡片式 Personal Records UI (Visual Borrowing)
-   运用了 Information Chunking 和 Typography Scale
-   ========================================= */
+/* Implement visual hierarchy and information chunking for PR records to improve readability */
 .records-list-modern {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 16px;
 
-    /* 🚨 核心修复：锁死最大高度，强制内部滚动 (Scrollable Container) */
+    /* Constrain maximum height to keep the widget within the dashboard viewport, enabling local scrolling */
     max-height: 280px;
     overflow-y: auto;
-    padding-right: 6px; /* 给滚动条留出一点呼吸空间 */
+    padding-right: 6px;
 }
 
-/* 🚨 视觉升级：干掉浏览器原生丑陋的滚动条，换上现代隐形滚动条 */
+/* Custom scrollbar styling applied to match the polished aesthetic of the application */
 .records-list-modern::-webkit-scrollbar {
     width: 6px;
 }
@@ -149,7 +141,7 @@
     background: transparent;
 }
 .records-list-modern::-webkit-scrollbar-thumb {
-    background: #cbd5e1; /* 极浅的高级灰 */
+    background: #cbd5e1;
     border-radius: 10px;
 }
 .records-list-modern::-webkit-scrollbar-thumb:hover {
@@ -157,7 +149,7 @@
 }
 
 .pr-card-modern {
-    background-color: #f8f9fa; /* 浅灰底色制造边界感 (Light background) */
+    background-color: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 12px;
     padding: 16px 20px;
@@ -169,7 +161,7 @@
 
 .pr-card-modern:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04); /* 轻微的物理悬浮感 (Elevation) */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
 }
 
 .pr-info {
@@ -193,13 +185,14 @@
 .pr-weight {
     display: flex;
     align-items: baseline;
-    gap: 4px; /* 数字和单位紧贴 (Proximity) */
+    gap: 4px;
 }
 
+/* Emphasize user achievement using typographical scale and color contrast */
 .pr-number {
-    font-size: 1.8rem; /* 极其夸张的巨大数字 (Huge Typography) */
+    font-size: 1.8rem;
     font-weight: 800;
-    color: #F59E0B; /* 亮眼的金色/黄色 (Gold Accent) 提升荣耀感 */
+    color: #F59E0B;
     line-height: 1;
 }
 

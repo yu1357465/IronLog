@@ -21,7 +21,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING('🚀 Initializing default exercise library from JSON...'))
 
         for item in raw_data:
-            # Data is clean, insert directly into the database
+            # Using get_or_create to ensure this script can be run multiple times safely without duplicating exercises
             obj, created = ExerciseLibrary.objects.get_or_create(
                 name=item["Name"],
                 defaults={'category': item["Category"]}

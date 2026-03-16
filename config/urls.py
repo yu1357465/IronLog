@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('core.urls')), #将根路径的请求全部打入core模块处理
+    path('',include('core.urls')),
 ]

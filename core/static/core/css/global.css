@@ -16,12 +16,12 @@
 }
 
 /* =========================================
-   全局基础防御性排版 (Defensive Layout from base.html)
+   Global Defensive Layout (from base.html)
    ========================================= */
-/* 强行解开所有框架可能存在的溢出隐藏限制 */
+/* Override potential framework constraints to ensure page-level vertical scrolling when content exceeds viewport */
 html, body {
     height: 100%;
-    overflow-y: auto !important; /* 如果内容超长，必须在最外层显示滚动条 */
+    overflow-y: auto !important;
     overflow-x: hidden;
 }
 
@@ -38,7 +38,7 @@ body {
 }
 
 /* =========================================
-   侧边栏导航 (Sidebar Navigation)
+   Sidebar Navigation
    ========================================= */
 .sidebar {
     width: 240px;
@@ -142,18 +142,18 @@ body {
 }
 
 /* =========================================
-   主内容区域 (Main Content Area)
+   Main Content Area
    ========================================= */
-/* 确保主内容区域也能自由呼吸，绝对不剪裁内部的图表 */
+/* Prevent clipping of internal elements like charts by allowing visible overflow in the main content container */
 .main-area, main, .main-content {
     flex: 1;
     min-width: 0;
-    overflow-y: visible !important; /* 核心修正：打破原有的 auto 束缚 */
+    overflow-y: visible !important;
     min-height: 100vh;
 }
 
 /* =========================================
-   通用工具类 (Utility Classes)
+   Utility Classes
    ========================================= */
 .p-4 {
     padding: 24px;
@@ -168,7 +168,7 @@ body {
 }
 
 /* =========================================
-   响应式断点 (Media Queries)
+   Responsive Breakpoints (Media Queries)
    ========================================= */
 @media (max-width: 960px) {
     .sidebar {
@@ -200,7 +200,7 @@ body {
 }
 
 /* =========================================
-   侧边栏登出按钮专属样式 (Separation of Concerns)
+   Sidebar Logout Button (Separation of Concerns)
    ========================================= */
 .sidebar-logout-btn {
     width: 100%;
@@ -224,11 +224,13 @@ body {
     border-color: #FCA5A5;
 }
 
+.sidebar-logout-form { margin: 0; width: 100%; }
+
 /* =========================================
-   全局排版呼吸感优化 (Whitespace & Breathing Room)
+   Whitespace & Optical Padding
    ========================================= */
+/* Increase padding to improve readability and create clear visual separation from the sidebar */
 .main-area, main, .main-content {
-    /* 🚨 核心修复：拉开与左侧边栏的距离，彻底告别窒息感 */
     padding-left: 36px !important;
     padding-right: 36px !important;
     padding-top: 20px !important;

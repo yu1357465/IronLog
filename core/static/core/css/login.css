@@ -1,25 +1,24 @@
 /* =========================================
-   Login 页面专属表单防御样式 (Separation of Concerns)
+   Login Specific Form Constraints (Separation of Concerns)
    ========================================= */
 
-/* 强制所有表单容器和内部元素采用 border-box 计算模式 */
+/* Apply border-box sizing to ensure padding and borders do not expand form elements beyond their container width */
 .form-group,
 .input-wrapper,
 .input-wrapper input {
     box-sizing: border-box !important;
 }
 
-/* 限制包裹层的绝对最大宽度 */
+/* Constrain the input wrapper to the parent container's width to prevent horizontal overflow */
 .input-wrapper {
     width: 100% !important;
     max-width: 100% !important;
     display: flex !important;
 }
 
-/* 限制输入框：占据剩余空间，但绝不溢出 */
+/* Override the default flexbox 'min-width: auto' behavior to allow the input field to shrink below its content size, preventing layout breaking on narrow screens */
 .input-wrapper input {
     width: 100% !important;
     flex-grow: 1 !important;
-    /* 极其底层的魔法：打破 Flexbox 的默认最小宽度限制 */
     min-width: 0 !important;
 }
