@@ -124,3 +124,87 @@
     .analytics-top-grid { grid-template-columns: 1fr; display: flex; flex-direction: column; }
     .radar-wrap, .trends-canvas-wrap { min-height: 260px; }
 }
+
+/* =========================================
+   高级卡片式 Personal Records UI (Visual Borrowing)
+   运用了 Information Chunking 和 Typography Scale
+   ========================================= */
+.records-list-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+
+    /* 🚨 核心修复：锁死最大高度，强制内部滚动 (Scrollable Container) */
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 6px; /* 给滚动条留出一点呼吸空间 */
+}
+
+/* 🚨 视觉升级：干掉浏览器原生丑陋的滚动条，换上现代隐形滚动条 */
+.records-list-modern::-webkit-scrollbar {
+    width: 6px;
+}
+.records-list-modern::-webkit-scrollbar-track {
+    background: transparent;
+}
+.records-list-modern::-webkit-scrollbar-thumb {
+    background: #cbd5e1; /* 极浅的高级灰 */
+    border-radius: 10px;
+}
+.records-list-modern::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.pr-card-modern {
+    background-color: #f8f9fa; /* 浅灰底色制造边界感 (Light background) */
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pr-card-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04); /* 轻微的物理悬浮感 (Elevation) */
+}
+
+.pr-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pr-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink, #1b1b1f);
+}
+
+.pr-date {
+    font-size: 0.8rem;
+    color: var(--ink-muted, #6a6d7a);
+    font-weight: 500;
+}
+
+.pr-weight {
+    display: flex;
+    align-items: baseline;
+    gap: 4px; /* 数字和单位紧贴 (Proximity) */
+}
+
+.pr-number {
+    font-size: 1.8rem; /* 极其夸张的巨大数字 (Huge Typography) */
+    font-weight: 800;
+    color: #F59E0B; /* 亮眼的金色/黄色 (Gold Accent) 提升荣耀感 */
+    line-height: 1;
+}
+
+.pr-unit {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink-muted, #6a6d7a);
+}

@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}Program Builder - IronFlow Pro{% endblock %}
+{% block title %}Program Builder - IronLog{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/program_builder.css' %}">
@@ -22,10 +22,21 @@
         {% for ex in library_exercises %}
         <div class="ex-lib-card">
           <div class="ex-icon-box">{{ ex.category|slice:":2"|upper }}</div>
-          <div>
+
+          <div style="flex: 1;">
             <div class="pb-card-title">{{ ex.name }}</div>
             <div class="pb-card-cat">{{ ex.category|default:"Custom" }}</div>
           </div>
+
+          {% if ex.user %}
+          <form method="POST" action="{% url 'program_builder' %}" style="margin: 0;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_library_exercise">
+            <input type="hidden" name="ex_id" value="{{ ex.id }}">
+            <button type="submit" class="pb-lib-del-btn" title="Delete custom exercise" onclick="return confirm('Remove this exercise from your library?');">×</button>
+          </form>
+          {% endif %}
+
         </div>
         {% empty %}
         <div class="pb-empty-lib">
@@ -43,8 +54,6 @@
           <p class="kanban-subtitle">Click '+ Add Exercise' to schedule workouts for specific days.</p>
         </div>
         <div class="pb-action-group">
-          <button type="button" id="saveChangesBtn" class="primary-btn">Save All Changes</button>
-
           <form method="POST" action="{% url 'program_builder' %}" class="pb-reset-form" id="resetWeekForm">
             {% csrf_token %}
             <input type="hidden" name="action" value="reset_week">
@@ -63,6 +72,7 @@
 
           <div class="pb-ex-list">
             {% for p_ex in program.exercises.all %}
+
             <div class="scheduled-ex-card">
               <div class="scheduled-ex-title">{{ forloop.counter }}. {{ p_ex.exercise.name }}</div>
               <div class="scheduled-ex-meta">
@@ -80,6 +90,7 @@
                 <button type="submit" title="Remove Exercise" class="pb-delete-btn">×</button>
               </form>
             </div>
+
             {% empty %}
             {% if not program.name %}
             <div class="pb-rest-day">🛌 Rest Day</div>
@@ -116,7 +127,7 @@
             <input type="text" id="magicInput" name="new_exercise_name" placeholder="Start typing (e.g., Bench Press)..." class="search-input pb-input-nomargin" required autocomplete="off">
             <div id="magicDropdown" class="pb-magic-dropdown">
               {% for ex in library_exercises %}
-              <div class="pb-magic-option" data-name="{{ ex.name }}">
+              <div class="pb-magic-option" data-name="{{ ex.name }}" data-category="{{ ex.category|default:'Custom' }}">
                 {{ ex.name }} <span class="pb-option-cat">{{ ex.category }}</span>
               </div>
               {% endfor %}

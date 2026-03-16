@@ -22,7 +22,8 @@ body.auth-body {
     height: 56px;
     margin: 0 auto 12px;
     border-radius: 18px;
-    background: linear-gradient(135deg, #7b5cff, #5b3df5);
+    /* 🚨 修复: 移除紫色渐变，统一使用纯正 IronLog 蓝 */
+    background: #2f5cff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,9 +46,10 @@ body.auth-body {
 /* ========== Card 卡片 ========== */
 .card {
     background: white;
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 20px 40px rgba(90, 70, 255, 0.12);
+    border-radius: 16px; /* 统一圆角 */
+    padding: 24px;
+    /* 🚨 修复: 移除紫色阴影，替换为蓝色透明阴影 */
+    box-shadow: 0 10px 30px rgba(47, 92, 255, 0.08);
     text-align: left;
 }
 
@@ -93,14 +95,16 @@ input {
 
 input:focus {
     outline: none;
-    border-color: #7b5cff;
+    /* 🚨 修复: 输入框激活边框变蓝 */
+    border-color: #2f5cff;
 }
 
 /* Focus Visible 高对比焦点 */
 input:focus-visible,
 button:focus-visible,
 a:focus-visible {
-    outline: 3px solid #7b5cff;
+    /* 🚨 修复: Tab键切换时的外轮廓线变蓝 */
+    outline: 3px solid #2f5cff;
     outline-offset: 2px;
 }
 
@@ -115,14 +119,21 @@ a:focus-visible {
     margin-bottom: 12px;
 }
 
+.form-meta {
+    margin-bottom: 24px;
+    text-align: right;
+}
+
 /* ========== Buttons 按钮 ========== */
 .btn-primary {
     width: 100%;
     padding: 12px;
     border: none;
     border-radius: 18px;
-    background: linear-gradient(135deg, #7b5cff, #5b3df5);
+    background: #2f5cff;
     color: white;
+    /* 🚨 修复 5：强制写死大小，确保与下面一致 */
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
@@ -136,11 +147,15 @@ a:focus-visible {
     display: block;
     text-align: center;
     padding: 12px;
+    /* 🚨 移除或者减小不必要的 margin-top 如果前面删了 divider */
+    margin-top: 16px;
     border-radius: 18px;
     background: #f0f1f7;
     text-decoration: none;
     color: #333;
-    font-weight: 500;
+    /* 🚨 修复 5：强制统一大小和字重 */
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .divider {
@@ -153,7 +168,8 @@ a:focus-visible {
 .link {
     font-size: 12px;
     text-decoration: none;
-    color: #5b3df5;
+    /* 🚨 修复: 忘记密码等链接颜色变蓝 */
+    color: #2f5cff;
 }
 
 .terms {
@@ -164,8 +180,8 @@ a:focus-visible {
 }
 
 .terms a {
-    color: #5b3df5;
-    text-decoration: none;
+    /* 🚨 修复: 条款链接颜色变蓝 */
+    color: #2f5cff;
 }
 
 .form-description {
@@ -174,15 +190,9 @@ a:focus-visible {
     margin-bottom: 18px;
 }
 
-.card {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
 .primary-btn {
-    background: linear-gradient(90deg, #6366f1, #9333ea);
+    /* 🚨 修复: 底部遗留的紫红渐变色统一改蓝 */
+    background: #2f5cff;
     color: white;
     padding: 14px 20px;
     border-radius: 12px;

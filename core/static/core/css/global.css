@@ -198,3 +198,38 @@ body {
         display: none;
     }
 }
+
+/* =========================================
+   侧边栏登出按钮专属样式 (Separation of Concerns)
+   ========================================= */
+.sidebar-logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background-color: var(--surface-alt);
+    color: var(--ink-muted);
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-logout-btn:hover {
+    background-color: #FEE2E2;
+    color: #EF4444;
+    border-color: #FCA5A5;
+}
+
+/* =========================================
+   全局排版呼吸感优化 (Whitespace & Breathing Room)
+   ========================================= */
+.main-area, main, .main-content {
+    /* 🚨 核心修复：拉开与左侧边栏的距离，彻底告别窒息感 */
+    padding-left: 36px !important;
+    padding-right: 36px !important;
+    padding-top: 20px !important;
+}

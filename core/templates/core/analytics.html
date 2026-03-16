@@ -23,21 +23,27 @@
       <h2 class="card-title-wrap">👑 Personal Records</h2>
       <p class="card-subtitle">Your best lifts by region</p>
 
-      <div class="records-grid">
+      <div class="records-list-modern">
         {% for log in logs %}
-        <div class="record-item">
-          <div class="record-label">
-            <strong>{{ log.exercise.category }}</strong>
-            <span>{{ log.exercise.name }} ({{ log.date|date:"Y-m-d" }})</span>
+        <div class="pr-card-modern">
+          <div class="pr-info">
+            <strong class="pr-name">{{ log.exercise.name }}</strong>
+            <span class="pr-date">({{ log.date|date:"Y/m/d" }})</span>
           </div>
-          <div>{{ log.weight }} kg</div>
+          <div class="pr-weight">
+            <span class="pr-number">{{ log.weight|floatformat:0 }}</span>
+            <span class="pr-unit">kg</span>
+          </div>
         </div>
         {% empty %}
         <p class="record-empty">No records yet.</p>
         {% endfor %}
       </div>
+
     </section>
   </div>
+
+  <div class="analytics-bottom-row">
 
   <div class="analytics-bottom-row">
     <section class="analytics-card analytics-card-bottom">

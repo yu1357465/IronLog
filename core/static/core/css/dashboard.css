@@ -269,3 +269,77 @@
         padding: 12px;
     }
 }
+
+/* =========================================
+   智能质检员的隐藏说明气泡 (Pure CSS Tooltip)
+   ========================================= */
+.pb-tooltip {
+    position: relative;
+    display: inline-flex;
+    cursor: help; /* 鼠标放上去会变成一个问号图标 */
+}
+
+.pb-tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--stroke, #e3e6ef);
+    color: var(--ink-muted, #6a6d7a);
+    font-size: 10px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+/* 悬停时小圆圈变成主题亮蓝色 */
+.pb-tooltip:hover .pb-tooltip-icon {
+    background-color: var(--accent, #2f5cff);
+    color: white;
+}
+
+.pb-tooltip-text {
+    /* 初始状态：物理隐身 */
+    visibility: hidden;
+    opacity: 0;
+
+    position: absolute;
+    bottom: 150%;
+    right: -10px; /* 气泡偏向左侧展开，防止顶破屏幕边缘 */
+    width: 220px;
+
+    background-color: #1b1b1f; /* 高级暗黑底色 */
+    color: #ffffff;
+    text-align: left;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+    /* 极简浮出动画 */
+    transform: translateY(4px);
+    transition: all 0.2s ease;
+    z-index: 100;
+    pointer-events: none; /* 防止遮挡下方的点击 */
+}
+
+/* 画那个向下的小三角尾巴 */
+.pb-tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 14px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1b1b1f transparent transparent transparent;
+}
+
+/* 鼠标悬停时：现出原形 */
+.pb-tooltip:hover .pb-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}

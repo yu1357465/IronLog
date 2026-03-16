@@ -23,14 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     // 2. 拦截占位链接 (Intercept dummy links) - 来自最新解耦逻辑
     // ==========================================
-    // 拦截忘记密码链接的点击事件
-    const forgotPwdLink = document.getElementById('forgot-pwd-link');
-    if (forgotPwdLink) {
-        forgotPwdLink.addEventListener('click', function(event) {
-            event.preventDefault(); // 阻止原生的页面跳转 (Prevent default navigation)
-            alert('Password reset is not required for this phase.');
-        });
-    }
 
     // 拦截服务条款与隐私政策的空链接
     const termsLink = document.getElementById('terms-link');

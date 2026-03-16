@@ -1,19 +1,8 @@
 /* =========================================
    IronLog Program Builder 核心样式表
    融合了现代视觉 UI 与强防御性分离结构布局
+   The Ultimate Refactored Version
    ========================================= */
-
-:root {
-    --ink: #1b1b1f;
-    --ink-muted: #6a6d7a;
-    --surface: #ffffff;
-    --surface-alt: #f1f3f8;
-    --stroke: #e3e6ef;
-    --accent: #4F46E5;       /* 调整为更契合 IronLog 主题的靛蓝 */
-    --accent-soft: #EEF2FF;
-    --shadow: 0 10px 24px rgba(20, 27, 45, 0.06); /* 调柔和了阴影 */
-    --shadow-hover: 0 18px 40px rgba(20, 27, 45, 0.08);
-}
 
 /* -----------------------------------------
    1. 全局防御性排版 (Defensive Layout)
@@ -61,16 +50,50 @@
     background: var(--surface);
     border-radius: 16px;
     padding: 20px;
-    display: flex; flex-direction: column;
     border: 1px solid var(--stroke);
     box-shadow: var(--shadow);
     max-height: calc(100vh - 120px);
-    min-height: 0;
+
+    /* 🚨 强制使用弹性盒子，并规定最小高度，防止空状态下缩成一团 */
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: calc(100vh - 140px) !important;
 }
 .pb-lib-title { margin: 0 0 16px 0; font-size: 1.2rem; color: var(--ink); }
-.pb-lib-scroll { flex-grow: 1; overflow-y: auto; padding-right: 4px; }
-.pb-empty-lib { text-align: center; color: var(--ink-muted); padding: 30px 10px; font-size: 0.9rem; font-weight: 500; }
+.pb-lib-scroll {
+    /* 🚨 强迫滚动区域占满面板里的所有剩余空间 */
+    flex: 1 !important;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.pb-empty-lib {
+    /* 🚨 让空提示文字在巨大的空白区域里完美居中 */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--ink-muted);
+    padding: 30px 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
 .pb-empty-sub { font-size: 0.8rem; }
+
+/* 自定义动作库的软删除按钮 */
+.pb-lib-del-btn {
+    background: none;
+    border: none;
+    color: #c0c6d4;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.2s;
+}
+.pb-lib-del-btn:hover { color: #ef4444; }
 
 /* 搜索框 UI */
 .search-input {
@@ -82,7 +105,7 @@
 }
 .search-input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+    box-shadow: 0 0 0 4px rgba(47, 92, 255, 0.12);
     background-color: var(--surface) !important;
 }
 .search-input option { background-color: var(--surface) !important; color: var(--ink) !important; }
@@ -93,7 +116,7 @@
     margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px;
 }
 .ex-lib-card:hover {
-    border-color: #C7D2FE;
+    border-color: #a8bdff;
     box-shadow: var(--shadow-hover);
     transform: translateY(-2px);
 }
@@ -101,7 +124,19 @@
     width: 36px; height: 36px; background: var(--accent-soft); color: var(--accent);
     border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;
 }
-.pb-card-title { font-weight: 700; color: var(--ink); font-size: 0.95rem; }
+
+/* 强制打破 flex 容器最小宽度，解决极其长的无空格英文名撑破卡片的问题 */
+.ex-lib-card > div[style*="flex: 1"] { min-width: 0 !important; }
+
+.pb-card-title {
+    font-weight: 700; color: var(--ink); font-size: 0.95rem;
+    /* 允许超长文本（哪怕是没有空格的括号）在碰到边界时无条件碎裂换行 */
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    line-height: 1.2 !important;
+    padding-right: 8px;
+}
 .pb-card-cat { font-size: 0.8rem; color: var(--ink-muted); }
 
 /* -----------------------------------------
@@ -138,8 +173,10 @@
 
 /* 每日列卡片 UI */
 .day-column {
-    min-width: 280px; width: 280px; background: var(--surface-alt); border-radius: 16px;
-    border: 1px solid var(--stroke); display: flex; flex-direction: column; padding: 14px;
+    min-width: 280px; width: 280px;
+    background: var(--surface); border-radius: 16px;
+    border: 1px solid #e3e6ef; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    display: flex; flex-direction: column; padding: 14px;
 }
 .day-column-header { padding-bottom: 12px; border-bottom: 2px solid var(--stroke); margin-bottom: 12px; }
 .pb-day-name { margin: 0; font-size: 0.85rem; color: var(--ink-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -153,21 +190,75 @@
 
 .pb-ex-list { flex-grow: 1; overflow-y: auto; }
 
-/* 计划内动作卡片 UI */
+/* =========================================
+   计划内动作卡片 UI (绝对定位删除按钮版)
+   ========================================= */
 .scheduled-ex-card {
-    background: var(--surface); border-radius: 10px; padding: 14px; margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02); border: 1px solid var(--stroke); position: relative; padding-right: 28px;
-    transition: transform 0.2s;
+    /* 🚨 必须加上 relative，给内部的绝对定位按钮划定坐标系 */
+    position: relative !important;
+
+    background-color: var(--surface, #ffffff);
+    border: 1px solid var(--stroke, #e3e6ef);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.2s;
 }
-.scheduled-ex-card:hover { transform: translateX(2px); border-color: #d7dcf0; }
-.scheduled-ex-title { font-weight: 700; color: var(--ink); font-size: 0.95rem; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scheduled-ex-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+.scheduled-ex-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink, #1b1b1f);
+
+    /* 打破单行限制，允许文字自然换行 */
+    white-space: normal !important;
+    word-break: break-word;
+    line-height: 1.3 !important;
+
+    /* 🚨 核心防御：给底部留出空间，防止长名字换行后压到右下角的删除按钮 */
+    padding-bottom: 16px;
+}
 .scheduled-ex-meta { font-size: 0.8rem; color: var(--ink-muted); font-weight: 600; }
+
 .pb-weight-hl { color: var(--accent); font-weight: 800; }
 .pb-divider { color: #D1D5DB; margin: 0 6px; }
 
-.pb-delete-form { position: absolute; top: 12px; right: 12px; margin: 0; }
-.pb-delete-btn { background: none; border: none; color: #D1D5DB; font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s; }
+/* =========================================
+   终极物理级修复：将整个表单进行绝对定位
+   彻底消除“幽灵点击”现象
+   ========================================= */
+.pb-delete-form {
+    /* 🚨 核心修复 1：让整个表单飞到右下角，而不是只让按钮飞 */
+    position: absolute !important;
+    bottom: 8px !important;
+    right: 12px !important;
+    z-index: 99 !important;
+    margin: 0;
+    padding: 0;
+}
+
+.pb-delete-btn {
+    /* 🚨 核心修复 2：按钮在这个表单内部自由舒展，增大物理点击面积 (Hitbox) */
+    position: relative !important;
+    pointer-events: auto !important;
+
+    /* 物理放大点击判定区，防止手滑 */
+    padding: 8px !important;
+    margin: -8px !important; /* 利用负边距抵消 padding，视觉上依然保持小巧 */
+
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #c0c6d4;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
 .pb-delete-btn:hover { color: #EF4444; }
+
 .pb-rest-day { display: flex; align-items: center; justify-content: center; height: 100%; color: #b6b8c4; font-weight: 600; font-size: 0.95rem; }
 
 /* 添加按钮 UI */
@@ -175,13 +266,24 @@
     width: 100%; padding: 12px; background: transparent; border: 2px dashed #b6b8c4;
     color: var(--ink-muted); font-weight: 600; border-radius: 10px; cursor: pointer; transition: all 0.2s; margin-top: auto;
 }
-.add-ex-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--surface); box-shadow: 0 4px 6px rgba(79,70,229,0.05); }
+.add-ex-btn:hover {
+    border-color: var(--accent); color: var(--accent); background: var(--surface);
+    box-shadow: 0 4px 6px rgba(47, 92, 255, 0.05);
+}
 
 /* -----------------------------------------
    4. 弹窗 (Modal) UI
    ----------------------------------------- */
 .pb-modal-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+    display: none; position: fixed; inset: 0;
+
+    /* 🚨 核心平衡 1：保留一丝丝图层分离感，压暗 15% 的光线，防止文字打架 */
+    background: rgba(30, 35, 50, 0.15);
+
+    z-index: 999; align-items: center; justify-content: center;
+
+    /* 🚨 核心平衡 2：彻底砍掉虚化 (blur)，让底层的动作库文字绝对清晰锐利！ */
+    backdrop-filter: none;
 }
 .pb-modal-box { background: var(--surface); padding: 28px; border-radius: 20px; width: 420px; max-width: 90%; box-shadow: var(--shadow-hover); border: 1px solid var(--stroke); }
 .pb-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -198,8 +300,17 @@
 .pb-metrics-row { display: flex; gap: 12px; margin-bottom: 28px; }
 .pb-metric-col { flex: 1; }
 .pb-metric-input { margin-bottom: 0 !important; text-align: center !important; }
-.pb-confirm-btn { width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 1.05rem; border: none; background: var(--accent); color: #fff; cursor: pointer; transition: background 0.2s; }
-.pb-confirm-btn:hover { background: #4338CA; }
+.pb-confirm-btn {
+    width: 100%; padding: 14px; border-radius: 12px; font-weight: 700;
+    font-size: 1.05rem; border: none; background: var(--accent); color: #fff;
+    cursor: pointer; transition: opacity 0.2s;
+}
+.pb-confirm-btn:hover { opacity: 0.9; }
+
+/* 物理切除 Number 输入框原生自带的丑陋上下箭头 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
 
 /* -----------------------------------------
    5. 下拉菜单 (Dropdown) UI

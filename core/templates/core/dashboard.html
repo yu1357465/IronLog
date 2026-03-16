@@ -27,14 +27,20 @@
         </div>
       </div>
 
-      <form method="POST" action="{% url 'dashboard' %}?day={{ selected_day }}" class="quick-log-form">
+      <form id="workoutLogForm" method="POST" action="{% url 'dashboard' %}?day={{ selected_day }}" class="quick-log-form">
         {% csrf_token %}
         <div class="form-header-row">
           <div class="form-col-exercise">Exercise</div>
           <div class="form-col-weight">KG</div>
           <div class="form-col-sets">Sets</div>
           <div class="form-col-reps">Reps</div>
-          <div class="form-col-done">Done</div>
+          <div class="form-col-done" style="display: flex; align-items: center; gap: 4px;">
+            Done
+            <div class="pb-tooltip">
+              <span class="pb-tooltip-icon">?</span>
+              <div class="pb-tooltip-text">Tip: Check specific boxes to save only those. Leave all unchecked to one-click save the entire workout!</div>
+            </div>
+          </div>
         </div>
 
         <div class="exercise-list-container">
@@ -150,4 +156,42 @@
   </section>
 
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById('workoutLogForm');
+
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        const allRows = document.querySelectorAll('.exercise-row');
+        let checkedCount = 0;
+
+        // 第一遍扫描：统计有多少个复选框被勾选了
+        allRows.forEach(row => {
+          const checkbox = row.querySelector('.done-checkbox');
+          if (checkbox && checkbox.checked) {
+            checkedCount++;
+          }
+        });
+
+        // 智能决策：如果勾选数大于 0，开启精准过滤模式
+        if (checkedCount > 0) {
+          allRows.forEach(row => {
+            const checkbox = row.querySelector('.done-checkbox');
+            // 如果这个动作没被勾选
+            if (!checkbox || !checkbox.checked) {
+              // 物理冻结：找到这行里所有的 input，打上 disabled 封条
+              const inputs = row.querySelectorAll('input');
+              inputs.forEach(input => {
+                input.disabled = true;
+              });
+            }
+          });
+        }
+        // 如果 checkedCount === 0，这段逻辑就不会执行，所有数据正常放行
+        // 拦截器处理完毕，卡车正式发车！
+      });
+    }
+  });
+</script>
 {% endblock %}

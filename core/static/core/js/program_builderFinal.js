@@ -21,24 +21,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 2. 一键保存排期逻辑 (Save All Changes)
-  const saveBtn = document.getElementById('saveChangesBtn');
-  if (saveBtn) {
-    saveBtn.addEventListener('click', function() {
+  // 2. 现代化改造：失焦自动保存逻辑 (Auto-Save on Blur / Change)
+  document.querySelectorAll('.program-title-input').forEach(input => {
+    // 监听 'change' 事件：当用户输入完内容，并且鼠标点到其他地方失去焦点时触发
+    input.addEventListener('change', function() {
       const payloadDiv = document.getElementById('saveWeekPayload');
       payloadDiv.innerHTML = ''; // 清空上一轮的缓存
 
-      // 抓取页面上所有的标题输入框
-      document.querySelectorAll('.program-title-input').forEach(input => {
-        const pid = input.getAttribute('data-pid');
-        const name = input.value;
+      // 抓取页面上所有的标题输入框，准备统一打包发送
+      document.querySelectorAll('.program-title-input').forEach(inp => {
+        const pid = inp.getAttribute('data-pid');
+        const name = inp.value;
         payloadDiv.innerHTML += `<input type="hidden" name="p_id" value="${pid}">`;
         payloadDiv.innerHTML += `<input type="hidden" name="p_name" value="${name}">`;
       });
 
+      // 隐藏式提交表单，触发页面瞬间刷新保存
       document.getElementById('saveWeekForm').submit();
     });
-  }
+  });
 
   // 3. 重置周计划的二次确认 (Reset Week Confirm)
   const resetForm = document.getElementById('resetWeekForm');
@@ -88,7 +89,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // 点击下拉选项填入输入框
     magicOptions.forEach(opt => {
       opt.addEventListener('click', function() {
+        // 🚨 新增完整的双向回填逻辑
         magicInput.value = this.getAttribute('data-name');
+        const selectedCategory = this.getAttribute('data-category'); // 提取刚才埋好的分类数据
+
+        // 精准制导：找到右侧的分类下拉框，并强制切换它的值
+        const categoryDropdown = document.querySelector('select[name="new_exercise_category"]');
+        if (categoryDropdown && selectedCategory) {
+          categoryDropdown.value = selectedCategory;
+        }
+
         magicDropdown.style.display = 'none';
       });
     });

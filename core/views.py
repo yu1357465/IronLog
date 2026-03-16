@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone  # 从 Django 工具箱拿时区工具
 from django.db.models import Count
+from django.db.models import Q
 import json
 from datetime import datetime, timedelta
 from .forms import WorkoutLogForm
@@ -87,9 +88,20 @@ def dashboard_view(request):
 
             if w_val and s_val and r_val:
                 try:
-                    exercise_obj, _ = ExerciseLibrary.objects.get_or_create(
-                        name=name_val, defaults={'category': 'Auto-Generated'}
-                    )
+                    # 🚨 核心防重与多租户隔离机制同步：先查后建
+                    exercise_obj = ExerciseLibrary.objects.filter(
+                        name__iexact=name_val,
+                        is_deleted=False
+                    ).filter(Q(user__isnull=True) | Q(user=request.user)).first()
+
+                    # 🚨 如果库里完全没有这个动作，才为你新建一个专属的
+                    if not exercise_obj:
+                        exercise_obj = ExerciseLibrary.objects.create(
+                            name=name_val,
+                            category='Auto-Generated',
+                            user=request.user
+                        )
+
                     WorkoutLog.objects.create(
                         user=request.user, exercise=exercise_obj,
                         weight=float(w_val), sets=int(s_val), reps=int(r_val)
@@ -124,6 +136,7 @@ def dashboard_view(request):
 
     # 【核心修复】：把这两个变量塞回给前端
     context = {
+        'active_page': 'dashboard',             # 🚨 [核心魔法]：发射 Dashboard 高亮信号
         'selected_day': selected_day,
         'todays_program': todays_program,
         'todays_exercises': todays_exercises,
@@ -186,11 +199,21 @@ def program_builder_view(request):
             try:
                 program = WorkoutProgram.objects.get(id=p_id, user=request.user)
                 if new_ex_name and new_ex_name.strip():
-                    exercise, _ = ExerciseLibrary.objects.get_or_create(
-                        name=new_ex_name.strip(),
-                        # 【修改】：不再写死 Custom，而是用前端传来的严谨分类
-                        defaults={'category': new_ex_cat}
-                    )
+                    ex_name = new_ex_name.strip()
+
+                    # 🚨 核心防重机制：先去整个大库里找（无论是系统的还是你自己的），只要有同名且没被删的，就直接拿来用
+                    exercise = ExerciseLibrary.objects.filter(
+                        name__iexact=ex_name, # 忽略大小写匹配
+                        is_deleted=False
+                    ).filter(Q(user__isnull=True) | Q(user=request.user)).first()
+
+                    # 如果掘地三尺都找不到，才真正为你新建一个专属动作
+                    if not exercise:
+                        exercise = ExerciseLibrary.objects.create(
+                            name=ex_name,
+                            category=new_ex_cat,
+                            user=request.user
+                        )
                 elif ex_id:
                     exercise = ExerciseLibrary.objects.get(id=ex_id)
                 else:
@@ -213,14 +236,26 @@ def program_builder_view(request):
                 print(f"❌ 添加动作失败: {e}")
             return redirect('program_builder')
 
-        # 2. 拦截：删除单个动作
+        # 🚨 核心抢救：补回彻底丢失的删除右侧看板动作的逻辑
         elif action == 'delete_exercise':
             p_ex_id = request.POST.get('p_ex_id')
             try:
-                # 安全校验：确保只能删自己的数据
+                # 安全校验：确保只能删自己当前计划里的动作
                 ProgramExercise.objects.filter(id=p_ex_id, program__user=request.user).delete()
             except Exception as e:
-                print(f"❌ 删除动作失败: {e}")
+                print(f"❌ 删除排期动作失败: {e}")
+            return redirect('program_builder')
+
+        # 5. 拦截：软删除自定义动作 (Soft Delete)
+        elif action == 'delete_library_exercise':
+            ex_id = request.POST.get('ex_id')
+            try:
+                # 严密的安全校验：只能删自己创建的动作！
+                ex = ExerciseLibrary.objects.get(id=ex_id, user=request.user)
+                ex.is_deleted = True  # 盖上隐形斗篷，不真删，保全历史日志
+                ex.save()
+            except Exception as e:
+                print(f"❌ 软删除动作失败或越权访问: {e}")
             return redirect('program_builder')
 
         # 3. 拦截：保存整周计划名称
@@ -243,8 +278,11 @@ def program_builder_view(request):
                 p.exercises.all().delete() # 物理清空里面的所有动作
             return redirect('program_builder')
 
-    # 1. 抓取全局动作库，发送给左侧面板
-    library_exercises = ExerciseLibrary.objects.filter(is_deleted=False).order_by('category', 'name')
+    # 1. 抓取全局动作库，发送给左侧面板,我们要查两种动作：1. user 为空 (系统公共动作) 或者 2. user 是当前登录用户的 (私有动作)
+    library_exercises = ExerciseLibrary.objects.filter(
+        Q(user__isnull=True) | Q(user=request.user),
+        is_deleted=False
+    ).order_by('category', 'name')
 
     # 2. 抓取该用户的 7 天排期计划，按周一到周日的顺序排列
     user_programs = WorkoutProgram.objects.filter(user=request.user).order_by('day_of_week')
@@ -265,6 +303,7 @@ def program_builder_view(request):
 
     # 将数据装包发给前线
     context = {
+        'active_page': 'program_builder',       # 🚨 [核心魔法]：发射 Program Builder 高亮信号
         'library_exercises': library_exercises,
         'weekly_programs': user_programs
     }
@@ -342,6 +381,7 @@ def analytics_view(request):
 
     # === 改动后的 context：加入新数据 ===
     context = {
+        'active_page': 'analytics',             # 🚨 [核心魔法]：发射 Analytics 高亮信号
         'logs': top_logs,
         'muscle_balance_values': json.dumps(balance_values),
         # 【新增】：传给前端的折线图数据包
