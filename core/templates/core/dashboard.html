@@ -5,150 +5,110 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
-<style>
-  /* 1. 终极容器护盾：高度锁死，物理消灭全局滚动条 */
-  .dashboard-page {
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-    height: calc(100vh - 24px);
-    max-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    gap: 16px !important;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  /* 2. 物理清除所有幽灵边距：绝对禁止外部 CSS 导致的重叠！ */
-  .dashboard-page section, .dashboard-page .card {
-    margin: 0 !important;
-    transform: none !important;
-    position: relative !important;
-    bottom: auto !important;
-    top: auto !important;
-  }
-
-  /* 3. 动作输入框高级样式 */
-  .pro-input::-webkit-outer-spin-button,
-  .pro-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .pro-input {
-    -moz-appearance: textfield; font-size: 1.1rem !important; padding: 8px !important;
-    font-weight: 600; color: #111827; border: 2px solid #E5E7EB !important; transition: all 0.2s;
-  }
-  .pro-input:focus { border-color: #4F46E5 !important; outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); }
-  .pro-title-input {
-    width: 100%; border: none; background: transparent; font-weight: 700; color: #111827; font-size: 0.95rem;
-    outline: none; transition: background 0.2s, padding 0.2s, box-shadow 0.2s; border-radius: 6px;
-  }
-  .pro-title-input:hover { background: #E5E7EB; padding-left: 6px; }
-  .pro-title-input:focus { background: #ffffff; box-shadow: 0 0 0 2px #4F46E5; padding-left: 6px; }
-
-  /* 4. 热力图自适应网格覆盖：强迫格子与月份完美对齐 */
-  .heatmap-cell {
-    width: 100% !important;
-    height: 100% !important;
-    background-color: #F3F4F6;
-    border-radius: 2px;
-    min-height: 12px;
-  }
-  .heatmap-cell.active { background-color: #10B981 !important; }
-  .legend-off { background-color: #F3F4F6; width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
-  .legend-on { background-color: #10B981; width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
-</style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-page">
 
-  <header style="flex: 0 0 auto;">
-    <h1 style="font-size: 1.5rem; margin: 0; font-weight: 700; color: #111827;">Dashboard</h1>
+  <header class="dashboard-header">
+    <h1 class="dashboard-title">Dashboard</h1>
   </header>
 
-  <section style="display: flex; gap: 16px; flex: 1 1 auto; min-height: 0;">
-
-    <div class="card workout-card" style="flex: 1.6; padding: 16px; display: flex; flex-direction: column; border-radius: 12px; min-height: 0;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex: 0 0 auto;">
+  <section class="dashboard-main-section">
+    <div class="card workout-card">
+      <div class="workout-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <a href="?day={{ prev_day }}" style="text-decoration: none; font-size: 1.1rem; color: #9CA3AF; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#4F46E5'" onmouseout="this.style.color='#9CA3AF'">◀</a>
-            <h3 style="margin: 0; font-size: 1.15rem; color: #111827;">{{ todays_workout_title }}</h3>
-            <a href="?day={{ next_day }}" style="text-decoration: none; font-size: 1.1rem; color: #9CA3AF; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#4F46E5'" onmouseout="this.style.color='#9CA3AF'">▶</a>
+          <div class="workout-title-wrapper">
+            <a href="?day={{ prev_day }}" class="nav-arrow">◀</a>
+            <h3 class="dashboard-title" style="font-size: 1.15rem;">{{ todays_workout_title }}</h3>
+            <a href="?day={{ next_day }}" class="nav-arrow">▶</a>
           </div>
-          <p style="color: #6B7280; font-size: 0.8rem; margin-top: 2px; margin-left: 28px; font-weight: 500;">{{ day_label }}</p>
+          <p class="workout-date-label">{{ day_label }}</p>
         </div>
       </div>
 
-      <form method="POST" action="{% url 'dashboard' %}?day={{ selected_day }}" class="quick-log-form" style="display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
+      <form method="POST" action="{% url 'dashboard' %}?day={{ selected_day }}" class="quick-log-form">
         {% csrf_token %}
-        <div style="display: flex; gap: 10px; padding: 0 8px 6px 8px; border-bottom: 2px solid #E5E7EB; color: #6B7280; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; flex: 0 0 auto;">
-          <div style="flex: 2;">Exercise</div>
-          <div style="width: 70px; text-align: center;">KG</div>
-          <div style="width: 60px; text-align: center;">Sets</div>
-          <div style="width: 60px; text-align: center;">Reps</div>
-          <div style="width: 40px; text-align: center;">Done</div>
+        <div class="form-header-row">
+          <div class="form-col-exercise">Exercise</div>
+          <div class="form-col-weight">KG</div>
+          <div class="form-col-sets">Sets</div>
+          <div class="form-col-reps">Reps</div>
+          <div class="form-col-done">Done</div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; margin-bottom: 12px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 6px;">
+        <div class="exercise-list-container">
           {% if todays_exercises %}
           {% for p_ex in todays_exercises %}
-
-          <div class="exercise-row" style="display: flex; gap: 8px; align-items: center; background: #F9FAFB; padding: 8px; border-radius: 8px; border: 1px solid #F3F4F6; flex-shrink: 0;">
-            <div style="flex: 2; display: flex; align-items: center;" class="pro-label">
-              <span style="color: #9CA3AF; font-size: 0.8rem; margin-right: 4px; font-weight: 800;">{{ forloop.counter }}.</span>
-              <input type="text" name="exercise_name" value="{{ p_ex.exercise.name }}" class="pro-title-input" style="font-size: 0.9rem;">
+          <div class="exercise-row">
+            <div class="pro-label">
+              <span class="pro-index">{{ forloop.counter }}.</span>
+              <input type="text" name="exercise_name" value="{{ p_ex.exercise.name }}" class="pro-title-input">
             </div>
-            <div style="width: 70px;"><input type="number" step="0.5" name="weight" value="{{ p_ex.target_weight|default_if_none:'' }}" placeholder="KG" class="pro-input" style="width: 100%; border-radius: 6px; text-align: center;"></div>
-            <div style="width: 60px;"><input type="number" name="sets" value="{{ p_ex.target_sets }}" class="pro-input" style="width: 100%; border-radius: 6px; text-align: center;"></div>
-            <div style="width: 60px;"><input type="number" name="reps" value="{{ p_ex.target_reps }}" class="pro-input" style="width: 100%; border-radius: 6px; text-align: center;"></div>
-
-            <div style="width: 40px; display: flex; justify-content: center;"><input type="checkbox" class="done-checkbox" style="width: 18px; height: 18px; accent-color: #4F46E5; cursor: pointer;"></div>
+            <div class="form-col-weight">
+              <input type="number" step="0.5" name="weight" value="{{ p_ex.target_weight|default_if_none:'' }}" placeholder="KG" class="pro-input">
+            </div>
+            <div class="form-col-sets">
+              <input type="number" name="sets" value="{{ p_ex.target_sets }}" class="pro-input">
+            </div>
+            <div class="form-col-reps">
+              <input type="number" name="reps" value="{{ p_ex.target_reps }}" class="pro-input">
+            </div>
+            <div class="form-col-done">
+              <input type="checkbox" class="done-checkbox">
+            </div>
           </div>
           {% endfor %}
           {% else %}
-          <div style="padding: 24px; text-align: center; color: #9CA3AF; font-size: 0.9rem; font-weight: 500; background: #F9FAFB; border-radius: 8px; border: 2px dashed #E5E7EB;">
-            No exercises assigned for today.<br><span style="font-size: 0.8rem;">Switch plan or go to Program Builder.</span>
+          <div class="empty-state">
+            No exercises assigned for today.<br>
+            <span class="empty-state-sub">Switch plan or go to Program Builder.</span>
           </div>
           {% endif %}
         </div>
 
-        <button type="submit" class="primary-btn" style="width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 1rem; flex: 0 0 auto;">Finish & Save Workout</button>
+        <button type="submit" class="primary-btn">Finish & Save Workout</button>
       </form>
     </div>
 
-    <div class="card recent-card" style="flex: 1; padding: 16px; display: flex; flex-direction: column; border-radius: 12px; min-height: 0;">
-      <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 1.1rem; color: #111827; flex: 0 0 auto;">Recent Activity (This Week)</h3>
+    <div class="card recent-card">
+      <h3 class="recent-title">Recent Activity (This Week)</h3>
 
-      <div style="flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 4px;">
-        <table class="recent-table" style="width: 100%; text-align: left; border-collapse: collapse; position: relative;">
-          <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+      <div class="table-container">
+        <table class="recent-table">
+          <thead class="recent-table-head">
           <tr>
-            <th style="padding: 0 0 8px 0; color: #6B7280; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid #E5E7EB;">Exercise</th>
-            <th style="padding: 0 0 8px 0; color: #6B7280; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid #E5E7EB;">Weight</th>
-            <th style="padding: 0 0 8px 0; color: #6B7280; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid #E5E7EB;">Reps</th>
-            <th style="padding: 0 0 8px 0; border-bottom: 2px solid #E5E7EB; width: 24px;"></th>
+            <th>Exercise</th>
+            <th>Weight</th>
+            <th>Reps</th>
+            <th class="th-action"></th>
           </tr>
           </thead>
           <tbody>
           {% if logs %}
           {% for log in logs %}
-          <tr style="border-bottom: 1px solid #F3F4F6; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#FEF2F2'" onmouseout="this.style.backgroundColor='transparent'">
-            <td style="padding: 10px 0;">
-              <div style="font-weight: 700; color: #111827; font-size: 0.9rem;">{{ log.exercise.name }}</div>
-              <div style="font-size: 0.75rem; color: #9CA3AF; margin-top: 2px; font-weight: 500;">{{ log.date|date:"m/d H:i" }}</div>
+          <tr>
+            <td>
+              <div class="log-ex-name">{{ log.exercise.name }}</div>
+              <div class="log-date">{{ log.date|date:"m/d H:i" }}</div>
             </td>
-            <td style="padding: 10px 0; color: #111827; font-weight: 700; font-size: 0.9rem;">{{ log.weight }} <span style="font-size: 0.8em; color: #9CA3AF; font-weight: 500;">kg</span></td>
-            <td style="padding: 10px 0; color: #111827; font-weight: 700; font-size: 0.9rem;">{{ log.sets }} <span style="font-size: 0.8em; color: #9CA3AF; font-weight: 500;">s</span> × {{ log.reps }}</td>
-            <td style="padding: 10px 0; text-align: right;">
-              <form method="POST" action="{% url 'dashboard' %}" style="margin: 0; display: inline;">
+            <td>
+              <span class="log-val">{{ log.weight }}</span> <span class="log-unit">kg</span>
+            </td>
+            <td>
+              <span class="log-val">{{ log.sets }}</span> <span class="log-unit">s</span> × <span class="log-val">{{ log.reps }}</span>
+            </td>
+            <td class="td-action">
+              <form method="POST" action="{% url 'dashboard' %}" class="delete-form">
                 {% csrf_token %}
                 <input type="hidden" name="delete_log_id" value="{{ log.id }}">
-                <button type="submit" title="Undo/Delete" style="background: none; border: none; color: #EF4444; font-size: 1.25rem; cursor: pointer; opacity: 0.6; padding: 0;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">×</button>
+                <button type="submit" title="Undo/Delete" class="delete-btn">×</button>
               </form>
             </td>
           </tr>
           {% endfor %}
           {% else %}
-          <tr><td colspan="4" style="padding: 24px 0; color: #9CA3AF; text-align: center; font-size: 0.85rem; font-weight: 500;">No records this week.</td></tr>
+          <tr class="empty-row"><td colspan="4">No records this week.</td></tr>
           {% endif %}
           </tbody>
         </table>
@@ -156,23 +116,23 @@
     </div>
   </section>
 
-  <section class="card heatmap-card" style="flex: 0 0 160px; border-radius: 12px; display: flex; flex-direction: column; padding: 16px 24px;">
-    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex: 0 0 auto;">
+  <section class="card heatmap-card">
+    <div class="heatmap-header">
       <div>
-        <h3 style="margin: 0; font-size: 1.1rem; color: #111827;">Training Heatmap</h3>
-        <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: #6B7280;">Consistency Graph</p>
+        <h3 class="heatmap-title">Training Heatmap</h3>
+        <p class="heatmap-subtitle">Consistency Graph</p>
       </div>
-      <div style="font-size: 0.8rem; display: flex; align-items: center; gap: 6px; color: #6B7280;">
+      <div class="heatmap-legend">
         <span>Less</span><span class="legend-off"></span><span class="legend-on"></span><span>More</span>
       </div>
     </div>
 
-    <div style="display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0;">
-      <div style="display: flex; flex: 1 1 auto; min-height: 0; gap: 8px;">
-        <div style="display: flex; flex-direction: column; justify-content: space-between; font-size: 0.75rem; color: #9CA3AF; padding: 4px 0;">
+    <div class="heatmap-body">
+      <div class="heatmap-grid-container">
+        <div class="heatmap-y-axis">
           <span>Mon</span><span>Wed</span><span>Fri</span>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(53, 1fr); grid-template-rows: repeat(7, 1fr); gap: 3px; flex-grow: 1;">
+        <div class="heatmap-grid">
           {% if heatmap_data %}
           {% for week in heatmap_data %}{% for day in week %}<div class="heatmap-cell {% if day == 1 %}active{% endif %}"></div>{% endfor %}{% endfor %}
           {% else %}
@@ -182,7 +142,7 @@
           {% endif %}
         </div>
       </div>
-      <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #9CA3AF; margin-top: 6px; padding-left: 28px;">
+      <div class="heatmap-x-axis">
         <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
         <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
       </div>
@@ -190,40 +150,4 @@
   </section>
 
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const quickLogForm = document.querySelector('.quick-log-form');
-    if (quickLogForm) {
-
-      // 防止回车键误触提交
-      quickLogForm.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') { event.preventDefault(); return false; }
-      });
-
-      // 监听表单的提交动作 (Submit Event)
-      quickLogForm.addEventListener('submit', function(event) {
-        const rows = quickLogForm.querySelectorAll('.exercise-row');
-        const checkedBoxes = quickLogForm.querySelectorAll('.done-checkbox:checked');
-
-        // 如果一个都没勾选，视为“一键全部完成”，直接放行发给后端
-        if (checkedBoxes.length === 0) {
-          return true;
-        }
-
-        // 如果勾选了部分动作，进入精准切割模式
-        rows.forEach(row => {
-          const checkbox = row.querySelector('.done-checkbox');
-
-          // 找出没打勾的那一行
-          if (!checkbox.checked) {
-            const inputs = row.querySelectorAll('input[type="text"], input[type="number"]');
-            // 强制添加 disabled 属性，让浏览器丢弃这些多余数据
-            inputs.forEach(input => input.disabled = true);
-          }
-        });
-      });
-      }
-  });
-</script>
 {% endblock %}

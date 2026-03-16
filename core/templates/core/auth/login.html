@@ -5,30 +5,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Login | IronFlow Pro</title>
+
   <link rel="stylesheet" href="{% static 'core/css/theme.css' %}">
-
-  <style>
-    /* 强制所有表单容器和内部元素采用 border-box 计算模式 */
-    .form-group,
-    .input-wrapper,
-    .input-wrapper input {
-      box-sizing: border-box !important;
-    }
-
-    /* 限制包裹层的绝对最大宽度 */
-    .input-wrapper {
-      width: 100% !important;
-      max-width: 100% !important;
-      display: flex !important;
-    }
-
-    /* 限制输入框：占据剩余空间，但绝不溢出 */
-    .input-wrapper input {
-      width: 100% !important;
-      flex-grow: 1 !important;
-      min-width: 0 !important; /* 极其底层的魔法：打破 Flexbox 的默认最小宽度限制 */
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
 </head>
 
 <body class="auth-body">
@@ -86,7 +65,7 @@
       {% endif %}
 
       <div class="form-meta">
-        <a href="#" onclick="alert('Password reset is not required for this phase.'); return false;" class="link">Forgot password?</a>
+        <a href="#" id="forgot-pwd-link" class="link">Forgot password?</a>
       </div>
 
       <button type="submit" class="btn-primary">
@@ -103,9 +82,9 @@
 
     <div class="terms">
       By logging in, you agree to our
-      <a href="#" onclick="return false;">Terms of Service</a>
+      <a href="#" id="terms-link">Terms of Service</a>
       and
-      <a href="#" onclick="return false;">Privacy Policy</a>
+      <a href="#" id="privacy-link">Privacy Policy</a>
     </div>
 
   </div>

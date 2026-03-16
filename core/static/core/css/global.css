@@ -15,6 +15,16 @@
     box-sizing: border-box;
 }
 
+/* =========================================
+   全局基础防御性排版 (Defensive Layout from base.html)
+   ========================================= */
+/* 强行解开所有框架可能存在的溢出隐藏限制 */
+html, body {
+    height: 100%;
+    overflow-y: auto !important; /* 如果内容超长，必须在最外层显示滚动条 */
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     font-family: "Space Grotesk", sans-serif;
@@ -27,6 +37,9 @@ body {
     min-height: 100vh;
 }
 
+/* =========================================
+   侧边栏导航 (Sidebar Navigation)
+   ========================================= */
 .sidebar {
     width: 240px;
     background: var(--surface);
@@ -128,12 +141,20 @@ body {
     cursor: pointer;
 }
 
-.main-area {
+/* =========================================
+   主内容区域 (Main Content Area)
+   ========================================= */
+/* 确保主内容区域也能自由呼吸，绝对不剪裁内部的图表 */
+.main-area, main, .main-content {
     flex: 1;
     min-width: 0;
-    overflow: auto;
+    overflow-y: visible !important; /* 核心修正：打破原有的 auto 束缚 */
+    min-height: 100vh;
 }
 
+/* =========================================
+   通用工具类 (Utility Classes)
+   ========================================= */
 .p-4 {
     padding: 24px;
 }
@@ -146,6 +167,9 @@ body {
     margin-top: 16px;
 }
 
+/* =========================================
+   响应式断点 (Media Queries)
+   ========================================= */
 @media (max-width: 960px) {
     .sidebar {
         width: 200px;

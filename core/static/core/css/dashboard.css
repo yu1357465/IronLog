@@ -1,221 +1,76 @@
+/* =========================================
+   IronLog Dashboard 核心样式表
+   融合了 UI 视觉规范与分离式结构布局
+   ========================================= */
+
+/* -----------------------------------------
+   1. 终极容器护盾与全局布局 (Defensive Layout)
+   ----------------------------------------- */
 .dashboard-page {
-    padding: 24px;
+    /* 物理消灭全局滚动条，锁死视口高度 */
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    height: calc(100vh - 24px);
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    color: var(--ink);
+    gap: 16px !important;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: var(--ink, #111827);
 }
 
-.dashboard-topbar {
+.dashboard-header {
+    flex: 0 0 auto;
+}
+
+.dashboard-title {
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 700;
+    color: #111827;
+}
+
+.dashboard-main-section {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--ink-muted);
-}
-
-.help-btn {
-    border: none;
-    background: var(--surface-alt);
-    color: var(--ink);
-    border-radius: 10px;
-    padding: 8px 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(240px, 1fr));
     gap: 16px;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
+/* 物理清除所有幽灵边距：绝对禁止外部 CSS 导致的重叠！ */
+.dashboard-page section,
+.dashboard-page .card {
+    margin: 0 !important;
+    transform: none !important;
+    position: relative !important;
+    bottom: auto !important;
+    top: auto !important;
+}
+
+/* -----------------------------------------
+   2. 卡片与通用组件 (Cards & Components)
+   ----------------------------------------- */
 .card {
-    background: var(--surface);
+    background: var(--surface, #ffffff);
     border-radius: 18px;
     padding: 18px;
     box-shadow: 0 10px 24px rgba(20, 27, 45, 0.06);
     border: 1px solid #edf0f6;
 }
 
-.stat-card {
+.workout-card {
+    flex: 1.6;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    min-height: 0;
 }
 
-.stat-label {
-    color: var(--ink-muted);
-    font-size: 13px;
-    margin: 0;
-}
-
-.stat-value {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.weight-input {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.weight-input span {
-    font-size: 16px;
-}
-
-.weight-input input {
-    width: 80px;
-    border: 1px solid #e2e6f3;
-    border-radius: 10px;
-    padding: 6px 8px;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--ink);
-    background: #fff;
-}
-
-.stat-value span {
-    font-size: 22px;
-    margin-right: 6px;
-}
-
-.progress-track {
-    height: 6px;
-    background: #e9ecf5;
-    border-radius: 999px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4f6ef7, #7e55f3);
-    border-radius: inherit;
-}
-
-.sparkline {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 4px;
-    align-items: end;
-}
-
-.sparkline span {
-    display: block;
-    height: 8px;
-    background: #dfe6ff;
-    border-radius: 6px;
-}
-
-.dashboard-main-grid {
-    display: grid;
-    grid-template-columns: minmax(420px, 1fr) minmax(240px, 320px);
-    gap: 16px;
-    align-items: start;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.card-header h3 {
-    margin: 0;
-    font-size: 16px;
-}
-
-.card-header p {
-    margin: 4px 0 0;
-    color: var(--ink-muted);
-    font-size: 12px;
-}
-
-.heatmap-legend {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    color: var(--ink-muted);
-}
-
-.legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #e4e7ef;
-}
-
-.legend-dot.legend-off {
-    background: #e4e7ef;
-}
-
-.legend-dot.legend-on {
-    background: #2f8f2f;
-}
-
-.heatmap-scroll {
-    overflow-x: auto;
-    padding-bottom: 6px;
-}
-
-.heatmap-grid-wrap {
-    display: grid;
-    grid-template-columns: 32px minmax(520px, 1fr);
-    gap: 8px;
-    align-items: start;
-}
-
-.heatmap-axis {
+.recent-card {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    font-size: 11px;
-    color: var(--ink-muted);
-    margin-top: 2px;
-}
-
-.heatmap-grid {
-    display: grid;
-    grid-template-rows: repeat(7, 10px);
-    grid-auto-flow: column;
-    gap: 4px;
-}
-
-.heatmap-cell {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #edf0f6;
-}
-
-.heatmap-cell.active {
-    background-color: #58b758;
-}
-
-.heatmap-months {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(30px, 1fr));
-    gap: 6px;
-    font-size: 11px;
-    color: var(--ink-muted);
-    margin-top: 8px;
-    padding-left: 40px;
-}
-
-.workout-card h3 {
-    margin: 0 0 12px;
-    font-size: 16px;
+    min-height: 0;
 }
 
 .primary-btn {
@@ -225,75 +80,192 @@
     border-radius: 12px;
     background: linear-gradient(90deg, #4f6ef7, #7e55f3);
     color: #fff;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
+    flex: 0 0 auto;
+    transition: opacity 0.2s;
+}
+.primary-btn:hover {
+    opacity: 0.9;
+}
+
+/* -----------------------------------------
+   3. 顶部导航与日期 (Header & Navigation)
+   ----------------------------------------- */
+.workout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 12px;
+    flex: 0 0 auto;
 }
 
-.workout-subtitle {
-    margin: 0 0 10px;
-    color: var(--ink-muted);
-    font-size: 12px;
+.workout-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.workout-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 8px;
+.nav-arrow {
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #9CA3AF;
+    padding: 0 4px;
+    transition: color 0.2s;
+}
+.nav-arrow:hover { color: #4F46E5; }
+
+.workout-date-label {
+    color: #6B7280;
+    font-size: 0.8rem;
+    margin-top: 2px;
+    margin-left: 28px;
+    font-weight: 500;
 }
 
-.workout-list li {
-    background: #f7f8fc;
-    padding: 8px 10px;
-    border-radius: 10px;
-    font-size: 13px;
+/* -----------------------------------------
+   4. 数据录入表单 (Quick Log Form)
+   ----------------------------------------- */
+.quick-log-form {
+    display: flex; flex-direction: column; flex-grow: 1; min-height: 0;
 }
 
-.recent-card h3 {
-    margin: 0 0 12px;
-    font-size: 16px;
+.form-header-row {
+    display: flex; gap: 10px; padding: 0 8px 6px 8px; border-bottom: 2px solid #E5E7EB;
+    color: #6B7280; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; flex: 0 0 auto;
+}
+.form-col-exercise { flex: 2; }
+.form-col-weight { width: 70px; text-align: center; }
+.form-col-sets { width: 60px; text-align: center; }
+.form-col-reps { width: 60px; text-align: center; }
+.form-col-done { width: 40px; text-align: center; display: flex; justify-content: center; }
+
+.exercise-list-container {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 8px; margin-bottom: 12px;
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 6px;
 }
 
+.exercise-row {
+    display: flex; gap: 8px; align-items: center; background: #F9FAFB;
+    padding: 8px; border-radius: 8px; border: 1px solid #F3F4F6; flex-shrink: 0;
+}
+
+.pro-label { flex: 2; display: flex; align-items: center; }
+.pro-index { color: #9CA3AF; font-size: 0.8rem; margin-right: 4px; font-weight: 800; }
+
+/* 动作输入框高级样式 */
+.pro-input::-webkit-outer-spin-button,
+.pro-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.pro-input {
+    -moz-appearance: textfield; font-size: 1.1rem !important; padding: 8px !important; width: 100%; text-align: center;
+    font-weight: 600; color: #111827; border: 2px solid #E5E7EB !important; border-radius: 6px; transition: all 0.2s;
+}
+.pro-input:focus { border-color: #4F46E5 !important; outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); }
+
+.pro-title-input {
+    width: 100%; border: none; background: transparent; font-weight: 700; color: #111827; font-size: 0.95rem;
+    outline: none; transition: background 0.2s, padding 0.2s, box-shadow 0.2s; border-radius: 6px;
+}
+.pro-title-input:hover { background: #E5E7EB; padding-left: 6px; }
+.pro-title-input:focus { background: #ffffff; box-shadow: 0 0 0 2px #4F46E5; padding-left: 6px; }
+
+.done-checkbox { width: 18px; height: 18px; accent-color: #4F46E5; cursor: pointer; }
+
+.empty-state {
+    padding: 24px; text-align: center; color: #9CA3AF; font-size: 0.9rem; font-weight: 500;
+    background: #F9FAFB; border-radius: 8px; border: 2px dashed #E5E7EB;
+}
+.empty-state-sub { font-size: 0.8rem; }
+
+/* -----------------------------------------
+   5. 近期活动表格 (Recent Activity)
+   ----------------------------------------- */
+.recent-title {
+    margin-top: 0; margin-bottom: 12px; font-size: 1.1rem; color: #111827; flex: 0 0 auto;
+}
+.table-container {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 4px;
+}
 .recent-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
+    width: 100%; text-align: left; border-collapse: collapse; position: relative; font-size: 13px;
+}
+.recent-table-head {
+    position: sticky; top: 0; background: white; z-index: 10;
+}
+.recent-table th {
+    padding: 0 0 8px 0; color: #6B7280; font-weight: 700; font-size: 0.75rem;
+    text-transform: uppercase; border-bottom: 2px solid #E5E7EB;
+}
+.th-action { width: 24px; }
+.recent-table tr {
+    border-bottom: 1px solid #F3F4F6; transition: background 0.2s;
+}
+.recent-table tbody tr:hover { background-color: #FEF2F2; }
+.recent-table td { padding: 12px 0; }
+.log-ex-name { font-weight: 700; color: #111827; font-size: 0.9rem; }
+.log-date { font-size: 0.75rem; color: #9CA3AF; margin-top: 2px; font-weight: 500; }
+.log-val { color: #111827; font-weight: 700; font-size: 0.9rem; }
+.log-unit { font-size: 0.8em; color: #9CA3AF; font-weight: 500; }
+.td-action { text-align: right; }
+.delete-form { margin: 0; display: inline; }
+.delete-btn {
+    background: none; border: none; color: #EF4444; font-size: 1.25rem;
+    cursor: pointer; opacity: 0.6; padding: 0; transition: opacity 0.2s;
+}
+.delete-btn:hover { opacity: 1; }
+.empty-row td {
+    padding: 24px 0; color: #9CA3AF; text-align: center; font-size: 0.85rem; font-weight: 500;
 }
 
-.recent-table thead {
-    color: var(--ink-muted);
-    text-align: left;
+/* -----------------------------------------
+   6. 热力图模块 (Heatmap)
+   ----------------------------------------- */
+.heatmap-card {
+    flex: 0 0 160px; border-radius: 12px; display: flex; flex-direction: column; padding: 16px 24px;
+}
+.heatmap-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex: 0 0 auto;
+}
+.heatmap-title { margin: 0; font-size: 1.1rem; color: #111827; }
+.heatmap-subtitle { margin: 2px 0 0 0; font-size: 0.8rem; color: #6B7280; }
+.heatmap-legend {
+    font-size: 0.8rem; display: flex; align-items: center; gap: 6px; color: #6B7280;
+}
+.heatmap-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.heatmap-grid-container { display: flex; flex: 1 1 auto; min-height: 0; gap: 8px; }
+.heatmap-y-axis {
+    display: flex; flex-direction: column; justify-content: space-between; font-size: 0.75rem; color: #9CA3AF; padding: 4px 0;
+}
+.heatmap-grid {
+    display: grid; grid-template-columns: repeat(53, 1fr); grid-template-rows: repeat(7, 1fr); gap: 3px; flex-grow: 1;
+}
+.heatmap-x-axis {
+    display: flex; justify-content: space-between; font-size: 0.75rem; color: #9CA3AF; margin-top: 6px; padding-left: 28px;
 }
 
-.recent-table th,
-.recent-table td {
-    padding: 12px 8px;
-    border-bottom: 1px solid #eef1f7;
+/* 热力图自适应网格覆盖：强迫格子与月份完美对齐 */
+.heatmap-cell {
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #edf0f6;
+    border-radius: 2px;
+    min-height: 12px;
 }
+.heatmap-cell.active { background-color: #58b758 !important; }
+.legend-off { background-color: #edf0f6; width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.legend-on { background-color: #58b758; width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
 
-.recent-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.empty-row {
-    text-align: center;
-    color: var(--ink-muted);
-}
-
+/* -----------------------------------------
+   7. 响应式适配 (Responsive Media Queries)
+   ----------------------------------------- */
 @media (max-width: 1200px) {
-    .dashboard-main-grid {
-        grid-template-columns: 1fr;
+    .dashboard-main-section {
+        flex-direction: column;
     }
 }
-
 @media (max-width: 900px) {
-    .dashboard-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .heatmap-grid-wrap {
-        grid-template-columns: 24px minmax(420px, 1fr);
+    .heatmap-card {
+        padding: 12px;
     }
 }
