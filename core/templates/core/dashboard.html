@@ -83,7 +83,7 @@
               <input type="number" name="reps" value="{{ p_ex.target_reps }}" class="pro-input">
             </div>
             <div class="form-col-done">
-              <input type="checkbox" class="done-checkbox">
+              <input type="checkbox" name="done_exercise_names" value="{{ p_ex.exercise.name }}" class="done-checkbox" style="width: 18px; height: 18px; accent-color: #4F46E5; cursor: pointer;">
             </div>
           </div>
           {% endfor %}

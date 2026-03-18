@@ -93,8 +93,21 @@ def dashboard_view(request):
         sets_list = request.POST.getlist('sets')
         reps_list = request.POST.getlist('reps')
 
+        # Mechanism: Retrieve the list of explicitly checked exercises from the frontend payload.
+        checked_exercises = request.POST.getlist('done_exercise_names')
+
+        # Decision: Fallback mechanism. If no exercises are explicitly checked,
+        # assume the user intends to log the entire routine as completed.
+        if not checked_exercises:
+            checked_exercises = ex_names
+
         for i in range(len(ex_names)):
             name_val = ex_names[i]
+
+            # Strict backend validation: Skip any payload row that was not explicitly marked as done.
+            if name_val not in checked_exercises:
+                continue
+
             w_val = weights[i].strip() if i < len(weights) else ''
             s_val = sets_list[i].strip() if i < len(sets_list) else ''
             r_val = reps_list[i].strip() if i < len(reps_list) else ''
