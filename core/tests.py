@@ -77,7 +77,6 @@ class IronFlowSystemTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(ProgramExercise.objects.count(), 0)
 
-    # 【新增测点】测试我们加入的“无头表单”批量保存周计划的功能
     def test_program_builder_post_save_week(self):
         self.client.login(username='test_user', password='secure_password_123')
         p1 = WorkoutProgram.objects.get(user=self.user, day_of_week=0)
@@ -90,7 +89,6 @@ class IronFlowSystemTests(TestCase):
         p1.refresh_from_db()
         self.assertEqual(p1.name, 'New Push Day')
 
-    # 【新增测点】测试我们加入的自定义动作“软删除”机制
     def test_program_builder_soft_delete(self):
         self.client.login(username='test_user', password='secure_password_123')
         custom_ex = ExerciseLibrary.objects.create(name='My Custom Curl', category='Arms', user=self.user)
@@ -100,7 +98,7 @@ class IronFlowSystemTests(TestCase):
         })
         self.assertEqual(response.status_code, 302)
         custom_ex.refresh_from_db()
-        self.assertTrue(custom_ex.is_deleted) # 验证物理记录还在，但标记为了已删除
+        self.assertTrue(custom_ex.is_deleted)
 
     def test_dashboard_post_save_workout(self):
         self.client.login(username='test_user', password='secure_password_123')
@@ -125,7 +123,7 @@ class IronFlowSystemTests(TestCase):
         response = self.client.get(reverse('analytics'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('muscle_balance_values', response.context)
-        self.assertIn('history_data', response.context) # 验证我们传给图表的新数据流
+        self.assertIn('history_data', response.context)
 
     # ==========================================
     # 4. Edge Cases & Exception Handling
